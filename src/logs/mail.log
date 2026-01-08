@@ -1,0 +1,982 @@
+==== 
+Date: 2025-11-15T00:27:43+01:00
+To: martinshabani7@gmail.com
+Subject: Vérifiez votre adresse email - Le Gourmet
+
+<p>Bonjour Martin,</p><p>Merci de votre inscription sur <strong>Le Gourmet</strong>. Veuillez confirmer votre adresse email en cliquant sur le lien ci-dessous:</p><p><a href="http://localhost/marie/web-ingeneering/auth/verify_email.php?token=957204449cfc9e5c772d8520b20475c2b63dc6713eab7bb234b669e17029a698">Confirmer mon email</a></p><p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur:<br>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=957204449cfc9e5c772d8520b20475c2b63dc6713eab7bb234b669e17029a698</p><p>— L'équipe Le Gourmet</p>
+
+==== 
+Date: 2025-11-15T01:24:48+01:00
+To: shabanimartin76@gmail.com
+Subject: Vérifiez votre adresse email - Le Gourmet
+
+<p>Bonjour Martin,</p><p>Merci de votre inscription sur <strong>Le Gourmet</strong>. Veuillez confirmer votre adresse email en cliquant sur le lien ci-dessous:</p><p><a href="http://localhost/marie/web-ingeneering/auth/verify_email.php?token=0b9cba000604a34c2c041f98a2b3db4f22db310ba9997a41fa8816a387480484">Confirmer mon email</a></p><p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur:<br>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=0b9cba000604a34c2c041f98a2b3db4f22db310ba9997a41fa8816a387480484</p><p>— L'équipe Le Gourmet</p>
+
+=== [SUCCÈS] 2025-11-15 01:58:09 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verify_email.php?token=d3c4a942bc1b6a076f6f59062319787354e2b9be8acc8ee1460fbd3814777b5d' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=d3c4a942bc1b6a076f6f59062319787354e2b9be8acc8ee1460fbd3814777b5d</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+==== 
+Date: 2025-11-15T02:04:24+01:00
+To: martinshabani7@gmail.com
+Subject: Vérifiez votre adresse email - Le Gourmet
+
+<p>Bonjour Martin,</p><p>Merci de votre inscription sur <strong>Le Gourmet</strong>. Veuillez confirmer votre adresse email en cliquant sur le lien ci-dessous:</p><p><a href="http://localhost/marie/web-ingeneering/auth/verify_email.php?token=31748f41b4ea2152511f9d83db8464ccf2b59601830ca25e6427a003d3c4169a">Confirmer mon email</a></p><p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur:<br>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=31748f41b4ea2152511f9d83db8464ccf2b59601830ca25e6427a003d3c4169a</p><p>— L'équipe Le Gourmet</p>
+
+==== 
+Date: 2025-11-15T02:11:33+01:00
+To: shabanimartin76@gmail.com
+Subject: Vérifiez votre adresse email - Le Gourmet
+
+<p>Bonjour Martin,</p><p>Merci de votre inscription sur <strong>Le Gourmet</strong>. Veuillez confirmer votre adresse email en cliquant sur le lien ci-dessous:</p><p><a href="http://localhost/marie/web-ingeneering/auth/verify_email.php?token=727fd260f233ef16d61d0e1f890e62cfc644516d6db6508561c6ec29426a65e4">Confirmer mon email</a></p><p>Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur:<br>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=727fd260f233ef16d61d0e1f890e62cfc644516d6db6508561c6ec29426a65e4</p><p>— L'équipe Le Gourmet</p>
+
+=== [SUCCÈS] 2025-11-15 02:14:25 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verify_email.php?token=09d97aca63583d7d83bf99b6c1a5e870704c9a315043a5fc90e5f7e00f23f222' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=09d97aca63583d7d83bf99b6c1a5e870704c9a315043a5fc90e5f7e00f23f222</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [ÉCHEC] 2025-11-15 02:21:01 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+ÉCHEC: SMTP Error: Could not connect to SMTP host. Failed to connect to server SMTP server error: Failed to connect to server Additional SMTP info: php_network_getaddresses: getaddrinfo for smtp.gmail.com failed: H�te inconnu. 
+
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verify_email.php?token=4c10e3737440176df1af335c9c1522e25810e018510f140e8621d990fb459c00' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=4c10e3737440176df1af335c9c1522e25810e018510f140e8621d990fb459c00</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-15 02:23:13 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verify_email.php?token=a64ab99b372a8dbcb64ec5aa3ea615119c1f449ac6ce86a8ef9ea94f78ecf8be' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=a64ab99b372a8dbcb64ec5aa3ea615119c1f449ac6ce86a8ef9ea94f78ecf8be</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-15 02:52:03 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verify_email.php?token=0c7f9d2d1e246e43127ffb03b9f986801d91db9c2d3eff269ffb6f50dbbd4f02' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verify_email.php?token=0c7f9d2d1e246e43127ffb03b9f986801d91db9c2d3eff269ffb6f50dbbd4f02</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-15 03:10:29 ===
+À: shabanimartin76@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=ba86a685dff641e465bac89acf23b9a6af6fc3dc4c10f5991c06b165d76c3f8c' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=ba86a685dff641e465bac89acf23b9a6af6fc3dc4c10f5991c06b165d76c3f8c</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-25 13:01:03 ===
+À: delphinsoft99@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour BIMPEKU,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.1.51/marie/web-ingeneering/auth/verification_mail.php?token=bca8ccaf1b752f227a839737c326eecca72e88426aedc19519f93dfbec8b90bc' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.1.51/marie/web-ingeneering/auth/verification_mail.php?token=bca8ccaf1b752f227a839737c326eecca72e88426aedc19519f93dfbec8b90bc</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-27 12:47:55 ===
+À: rachelmungo41@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Rachel,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.1.51/marie/web-ingeneering/auth/verification_mail.php?token=e0281c5b5ae360c940a0661ff7ff8823bf98b5a03cf37cc27b85f11f0f6d7755' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.1.51/marie/web-ingeneering/auth/verification_mail.php?token=e0281c5b5ae360c940a0661ff7ff8823bf98b5a03cf37cc27b85f11f0f6d7755</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-28 19:16:26 ===
+À: marietcheusi77@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Marie,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=77ad693db57d34c310d79f7dfe6341b1fa5dc684f54ee1f7cb67e155320e5085' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=77ad693db57d34c310d79f7dfe6341b1fa5dc684f54ee1f7cb67e155320e5085</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-28 19:27:42 ===
+À: chancebukangamarie@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Chance,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=08137f63f11c195e91c4c853993737f0fb2e64c740ab43ef2a47a649c7bd972a' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=08137f63f11c195e91c4c853993737f0fb2e64c740ab43ef2a47a649c7bd972a</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-28 20:03:34 ===
+À: shawama.martin7@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Gap,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=e530ef20474c28e2bd823676f6f3da0b32cf8c34fbea894a053cbcbf6796226d' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=e530ef20474c28e2bd823676f6f3da0b32cf8c34fbea894a053cbcbf6796226d</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-11-30 00:56:30 ===
+À: gapchance55@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Gap,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=aafc1c82e27d1214a12ecdbf4a3c3144977d08fe19a3915e77b52923d60cc10a' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=aafc1c82e27d1214a12ecdbf4a3c3144977d08fe19a3915e77b52923d60cc10a</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-12-05 19:59:45 ===
+À: martinshabani7@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Chance,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=b8dd33f74fbb3d642391e2f1ef5732932457b381ea31a23264eac7fd88b040fb' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=b8dd33f74fbb3d642391e2f1ef5732932457b381ea31a23264eac7fd88b040fb</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-12-08 22:22:10 ===
+À: edouard64036@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Edouard,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=eb712eea211c302c0058c24d50b0d4ef71507d75d578e88348cc3f02ed8ce0b4' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://192.168.43.243/marie/web-ingeneering/auth/verification_mail.php?token=eb712eea211c302c0058c24d50b0d4ef71507d75d578e88348cc3f02ed8ce0b4</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-12-15 13:23:52 ===
+À: chancebukangamarie@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Chance,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=17725d13643e0a465f6828281816417b3d8efbacc6542926d120a7a9f8776bb0' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=17725d13643e0a465f6828281816417b3d8efbacc6542926d120a7a9f8776bb0</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-12-15 13:33:53 ===
+À: gapmar99@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Marie,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=426f83eca976ffb0ff0777a0beae203eb8785fc4fde34f2a4d44ec72c1446a5d' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost/marie/web-ingeneering/auth/verification_mail.php?token=426f83eca976ffb0ff0777a0beae203eb8785fc4fde34f2a4d44ec72c1446a5d</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+
+=== [SUCCÈS] 2025-12-26 02:41:15 ===
+À: gapmar99@gmail.com
+Sujet: Vérifiez votre adresse email - Le Gourmet
+Contenu:
+
+    <!DOCTYPE html>
+    <html lang='fr'>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f8f9fa; }
+            .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; }
+            .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }
+            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px; text-align: center; }
+            .verification-link { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin: 20px 0; word-break: break-all; font-family: monospace; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1><i class='fas fa-utensils'></i> Le Gourmet</h1>
+                <p>Votre destination culinaire</p>
+            </div>
+            
+            <div class='content'>
+                <h2>Bonjour Martin,</h2>
+                <p>Merci de vous être inscrit sur <strong>Le Gourmet</strong> ! Pour activer votre compte et commencer à explorer nos délicieuses recettes, veuillez confirmer votre adresse email.</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost:8080/auth/verification_mail.php?token=12e0c01f372facd9715a2bd4c5244a278ea0a350f92239b06a5dca83b3b04d91' class='button'>
+                        <i class='fas fa-check-circle'></i> Confirmer mon email
+                    </a>
+                </div>
+                
+                <p>Si le bouton ne fonctionne pas, copiez et collez le lien suivant dans votre navigateur :</p>
+                <div class='verification-link'>http://localhost:8080/auth/verification_mail.php?token=12e0c01f372facd9715a2bd4c5244a278ea0a350f92239b06a5dca83b3b04d91</div>
+                
+                <div style='background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 15px; margin: 20px 0;'>
+                    <strong><i class='fas fa-shield-alt'></i> Sécurité :</strong> 
+                    Ce lien expirera dans 24 heures pour protéger votre compte.
+                </div>
+                
+                <p>Si vous n'avez pas créé de compte sur Le Gourmet, vous pouvez ignorer cet email.</p>
+                
+                <div class='footer'>
+                    <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+                    <p>© 2025 Le Gourmet. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    
+

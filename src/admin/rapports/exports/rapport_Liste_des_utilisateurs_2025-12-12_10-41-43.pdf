@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Liste des utilisateurs - Le Gourmet</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #333; }
+                .logo { flex-shrink: 0; }
+                .title-container { text-align: center; flex-grow: 1; }
+                .restaurant-title { font-size: 28px; color: #2c3e50; margin: 0; }
+                .report-title { font-size: 18px; color: #e74c3c; margin: 5px 0; }
+                .report-info { font-size: 12px; color: #7f8c8d; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th { background: #2c3e50; color: white; padding: 12px; text-align: left; }
+                td { padding: 10px; border: 1px solid #ddd; }
+                tr:nth-child(even) { background: #f9f9f9; }
+                .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; border-top: 1px solid #ddd; padding-top: 15px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <div class="logo"><div style="width: 60px; height: 60px; background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 5px;">LG</div></div>
+                <div class="title-container">
+                    <h1 class="restaurant-title">Le Gourmet</h1>
+                    <h2 class="report-title">Liste des utilisateurs</h2>
+                    <div class="report-info">
+                        <p>Généré le: 12/12/2025 à 10:41:43<br>Période: 2025-12-12 au 2025-12-12<br>Utilisateur: Martin Shabani | Catégorie: utilisateurs
+                        </p>
+                    </div>
+                </div>
+                <div class="logo"><div style="width: 60px; height: 60px; background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 5px;">LG</div></div>
+            </div>
+            <table>
+                <thead><tr><th>ID</th><th>Nom complet</th><th>Email</th><th>Rôle</th><th>Date création</th><th>Dernière connexion</th></tr></thead><tbody><tr><td>3</td><td>Edouard Luna</td><td>edouard64036@gmail.com</td><td>customer</td><td>2025-12-08 23:22:01</td><td>2025-12-08 23:32:18</td></tr><tr><td>2</td><td>Martin Shabani</td><td>martin.shabani7@gmail.com</td><td>admin</td><td>2025-12-05 21:03:44</td><td>2025-12-11 11:46:01</td></tr><tr><td>1</td><td>Chance Martine</td><td>martinshabani7@gmail.com</td><td>customer</td><td>2025-12-05 20:59:37</td><td>2025-12-05 21:01:03</td></tr></tbody></table>
+            <div class="footer">
+                <p>Système Le Gourmet © 2025 - Généré par Martin Shabani</p>
+            </div>
+        </body>
+        </html>

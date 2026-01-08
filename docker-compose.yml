@@ -1,0 +1,77 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: web-ingeneering-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  php:
+    build:
+      context: ./docker/php
+      args:
+        USER_ID: 1000
+        GROUP_ID: 1000
+    container_name: web-ingeneering-php
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      PHP_MEMORY_LIMIT: 512M
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: restaurant_gourmet
+      DB_USER: root
+      DB_PASSWORD: root
+    dns:
+      - 8.8.8.8          # DNS Google primaire
+      - 1.1.1.1          # DNS Cloudflare secondaire
+      - 208.67.222.222   # OpenDNS optionnel
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # MySQL 
+  mysql:
+    image: mysql:8.0
+    container_name: web-ingeneering-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: restaurant_gourmet
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # PHPMyAdmin 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: web-ingeneering-phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
