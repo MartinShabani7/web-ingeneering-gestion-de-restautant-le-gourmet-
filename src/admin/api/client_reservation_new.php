@@ -61,7 +61,7 @@ try {
             $reservation_date = $_POST['reservation_date'] ?? '';
             $reservation_time = $_POST['reservation_time'] ?? '';
             $party_size = isset($_POST['party_size']) ? (int)$_POST['party_size'] : 1;
-            $table_number = Security::sanitizeInput($_POST['table_name'] ?? '');
+            $table_id = isset($_POST['table_id']) ? (int)$_POST['table_id'] : 0;
             $special_requests = Security::sanitizeInput($_POST['special_requests'] ?? '');
             
             // Validation des champs obligatoires
@@ -94,14 +94,34 @@ try {
                 throw new Exception('La réservation doit être faite au moins 2 heures à l\'avance');
             }
             
-            // Vérifier la disponibilité
-            if (!checkAvailability($pdo, $reservation_date, $reservation_time)) {
-                throw new Exception('Ce créneau horaire n\'est plus disponible');
-            }
-            
             // Vérifier la taille du groupe
             if ($party_size < 1 || $party_size > 12) {
                 throw new Exception('La taille du groupe doit être entre 1 et 12 personnes');
+            }
+            
+            // Si une table est sélectionnée, vérifier qu'elle existe et est disponible
+            if ($table_id > 0) {
+                $stmt = $pdo->prepare("SELECT id, table_name, capacity FROM tables WHERE id = ? AND is_available = 1");
+                $stmt->execute([$table_id]);
+                $table = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$table) {
+                    throw new Exception('La table sélectionnée n\'existe pas ou n\'est pas disponible');
+                }
+                
+                // Vérifier la capacité de la table
+                if ($party_size > $table['capacity']) {
+                    throw new Exception('La table "' . $table['table_name'] . '" a une capacité de ' . $table['capacity'] . ' personnes, mais votre groupe est de ' . $party_size . ' personnes.');
+                }
+                
+                $table_value = $table_id;
+            } else {
+                $table_value = null;
+            }
+            
+            // Vérifier la disponibilité du créneau horaire
+            if (!checkAvailability($pdo, $reservation_date, $reservation_time, null, $table_id)) {
+                throw new Exception('Ce créneau horaire n\'est plus disponible');
             }
             
             // Récupérer les infos utilisateur complètes depuis la base
@@ -123,7 +143,7 @@ try {
                 INSERT INTO reservations 
                 (customer_id, customer_name, customer_email, customer_phone, 
                  reservation_date, reservation_time, party_size, status, 
-                 special_requests, table_number, created_at) 
+                 special_requests, table_id, created_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())
             ");
             
@@ -136,7 +156,7 @@ try {
                 $reservation_time,
                 $party_size,
                 $special_requests,
-                $table_number ?: null
+                $table_value  // NULL ou l'ID de la table
             ]);
             
             $reservation_id = $pdo->lastInsertId();
@@ -145,6 +165,146 @@ try {
                 'success' => true, 
                 'message' => 'Réservation créée avec succès',
                 'reservation_id' => $reservation_id
+            ]);
+            break;
+            
+        case 'update':
+            // Mettre à jour une réservation existante
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Méthode non autorisée');
+            }
+            
+            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) {
+                throw new Exception('Token CSRF invalide');
+            }
+            
+            $reservation_id = isset($_POST['reservation_id']) ? (int)$_POST['reservation_id'] : 0;
+            if ($reservation_id <= 0) {
+                throw new Exception('ID de réservation invalide');
+            }
+            
+            // Vérifier que la réservation appartient à l'utilisateur
+            $stmt = $pdo->prepare("SELECT * FROM reservations WHERE id = ? AND customer_id = ?");
+            $stmt->execute([$reservation_id, $current_user_id]);
+            $existing_reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$existing_reservation) {
+                throw new Exception('Réservation non trouvée');
+            }
+            
+            // Vérifier qu'on peut modifier (statut pending et au moins 1h avant)
+            if ($existing_reservation['status'] !== 'pending') {
+                throw new Exception('Seules les réservations en attente peuvent être modifiées');
+            }
+            
+            $reservation_datetime = $existing_reservation['reservation_date'] . ' ' . $existing_reservation['reservation_time'];
+            if (strtotime($reservation_datetime) < (time() + 3600)) {
+                throw new Exception('Impossible de modifier une réservation à moins d\'une heure du rendez-vous');
+            }
+            
+            // Récupérer les nouvelles données
+            $customer_name = Security::sanitizeInput($_POST['customer_name'] ?? '');
+            $customer_email = Security::sanitizeInput($_POST['customer_email'] ?? $user_email);
+            $customer_phone = Security::sanitizeInput($_POST['customer_phone'] ?? '');
+            $reservation_date = $_POST['reservation_date'] ?? '';
+            $reservation_time = $_POST['reservation_time'] ?? '';
+            $party_size = isset($_POST['party_size']) ? (int)$_POST['party_size'] : 1;
+            $table_id = isset($_POST['table_id']) ? (int)$_POST['table_id'] : 0;
+            $special_requests = Security::sanitizeInput($_POST['special_requests'] ?? '');
+            
+            // Validation des champs obligatoires
+            if (empty($customer_name)) {
+                throw new Exception('Le nom complet est requis');
+            }
+            if (empty($reservation_date)) {
+                throw new Exception('La date est requise');
+            }
+            if (empty($reservation_time)) {
+                throw new Exception('L\'heure est requise');
+            }
+            if ($party_size <= 0) {
+                throw new Exception('Le nombre de personnes doit être supérieur à 0');
+            }
+            
+            // Valider l'email s'il est fourni
+            if (!empty($customer_email) && !Security::validateEmail($customer_email)) {
+                throw new Exception('L\'email n\'est pas valide');
+            }
+            
+            // Vérifier que la date n'est pas passée
+            $new_reservation_datetime = $reservation_date . ' ' . $reservation_time;
+            if (strtotime($new_reservation_datetime) < time()) {
+                throw new Exception('Impossible de réserver pour une date/heure passée');
+            }
+            
+            // Délai minimum pour réservation (2 heures)
+            if (strtotime($new_reservation_datetime) < (time() + 7200)) {
+                throw new Exception('La réservation doit être faite au moins 2 heures à l\'avance');
+            }
+            
+            // Vérifier la taille du groupe
+            if ($party_size < 1 || $party_size > 12) {
+                throw new Exception('La taille du groupe doit être entre 1 et 12 personnes');
+            }
+            
+            // Si une table est sélectionnée, vérifier qu'elle existe et est disponible
+            if ($table_id > 0) {
+                $stmt = $pdo->prepare("SELECT id, table_name, capacity FROM tables WHERE id = ? AND is_available = 1");
+                $stmt->execute([$table_id]);
+                $table = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$table) {
+                    throw new Exception('La table sélectionnée n\'existe pas ou n\'est pas disponible');
+                }
+                
+                // Vérifier la capacité de la table
+                if ($party_size > $table['capacity']) {
+                    throw new Exception('La table "' . $table['table_name'] . '" a une capacité de ' . $table['capacity'] . ' personnes, mais votre groupe est de ' . $party_size . ' personnes.');
+                }
+                
+                $table_value = $table_id;
+            } else {
+                $table_value = null;
+            }
+            
+            // Vérifier la disponibilité du nouveau créneau (en excluant la réservation actuelle)
+            if (!checkAvailability($pdo, $reservation_date, $reservation_time, $reservation_id, $table_id)) {
+                throw new Exception('Le nouveau créneau horaire n\'est plus disponible');
+            }
+            
+            // Mettre à jour
+            $stmt = $pdo->prepare("
+                UPDATE reservations SET
+                customer_name = ?,
+                customer_email = ?,
+                customer_phone = ?,
+                reservation_date = ?,
+                reservation_time = ?,
+                party_size = ?,
+                special_requests = ?,
+                table_id = ?,
+                updated_at = NOW()
+                WHERE id = ? AND customer_id = ?
+            ");
+            
+            $table_value = ($table_id > 0) ? $table_id : null;
+            
+            $stmt->execute([
+                $customer_name,
+                $customer_email,
+                $customer_phone,
+                $reservation_date,
+                $reservation_time,
+                $party_size,
+                $special_requests,
+                $table_value,
+                $reservation_id,
+                $current_user_id
+            ]);
+            
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Réservation mise à jour avec succès'
             ]);
             break;
             
@@ -161,12 +321,14 @@ try {
             
             $sql = "SELECT 
                     r.*,
+                    t.table_name,
                     CASE 
                         WHEN r.reservation_date < CURDATE() THEN 'passée'
                         WHEN r.reservation_date = CURDATE() AND r.reservation_time < CURTIME() THEN 'passée'
                         ELSE 'à venir'
                     END as time_status
                     FROM reservations r 
+                    LEFT JOIN tables t ON r.table_id = t.id
                     WHERE r.customer_id = ?";
             
             $params = [$current_user_id];
@@ -231,109 +393,6 @@ try {
             ]);
             break;
             
-        case 'update':
-            // Mettre à jour une réservation (POST uniquement)
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new Exception('Méthode non autorisée pour cette action');
-            }
-            
-            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) {
-                throw new Exception('Token CSRF invalide');
-            }
-            
-            $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-            if ($id <= 0) {
-                throw new Exception('ID invalide');
-            }
-            
-            // Vérifier que la réservation appartient à l'utilisateur
-            $reservation = getReservation($pdo, $id, $current_user_id);
-            if (!$reservation) {
-                http_response_code(404);
-                echo json_encode(['success' => false, 'message' => 'Réservation non trouvée']);
-                exit;
-            }
-            
-            // Vérifier si la réservation peut être modifiée
-            $status = $reservation['status'];
-            $reservation_datetime = $reservation['reservation_date'] . ' ' . $reservation['reservation_time'];
-            
-            if ($status === 'cancelled' || $status === 'completed') {
-                throw new Exception('Impossible de modifier une réservation ' . $status);
-            }
-            
-            if (strtotime($reservation_datetime) < (time() + 3600)) {
-                throw new Exception('Impossible de modifier une réservation à moins d\'une heure du rendez-vous');
-            }
-            
-            // Préparer les mises à jour
-            $fields = [
-                'customer_name' => 'string',
-                'customer_email' => 'string',
-                'customer_phone' => 'string',
-                'reservation_date' => 'string',
-                'reservation_time' => 'string',
-                'party_size' => 'int',
-                'special_requests' => 'string',
-                'table_number' => 'string'
-            ];
-            
-            $updates = [];
-            $params = [];
-            
-            foreach ($fields as $field => $type) {
-                if (isset($_POST[$field])) {
-                    if ($type === 'string') {
-                        $value = Security::sanitizeInput($_POST[$field]);
-                    } else {
-                        $value = (int)$_POST[$field];
-                    }
-                    
-                    // Validation spécifique
-                    if ($field === 'party_size' && ($value < 1 || $value > 12)) {
-                        throw new Exception('La taille du groupe doit être entre 1 et 12 personnes');
-                    }
-                    
-                    if ($field === 'customer_email' && !empty($value) && !Security::validateEmail($value)) {
-                        throw new Exception('L\'email n\'est pas valide');
-                    }
-                    
-                    $updates[] = "$field = ?";
-                    $params[] = $value;
-                }
-            }
-            
-            if (empty($updates)) {
-                throw new Exception('Aucune modification fournie');
-            }
-            
-            // Si la date ou l'heure change, vérifier la disponibilité
-            if (isset($_POST['reservation_date']) || isset($_POST['reservation_time'])) {
-                $new_date = $_POST['reservation_date'] ?? $reservation['reservation_date'];
-                $new_time = $_POST['reservation_time'] ?? $reservation['reservation_time'];
-                
-                if (!checkAvailability($pdo, $new_date, $new_time, $id)) {
-                    throw new Exception('Le nouveau créneau horaire n\'est plus disponible');
-                }
-            }
-            
-            // Ajouter l'ID et l'ID utilisateur pour la clause WHERE
-            $params[] = $id;
-            $params[] = $current_user_id;
-            
-            // Exécuter la mise à jour
-            $sql = "UPDATE reservations SET " . implode(', ', $updates) . ", updated_at = NOW() 
-                    WHERE id = ? AND customer_id = ?";
-            
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute($params);
-            
-            echo json_encode([
-                'success' => true, 
-                'message' => 'Réservation mise à jour avec succès'
-            ]);
-            break;
-            
         case 'cancel':
             // Annuler une réservation (POST uniquement)
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -350,7 +409,10 @@ try {
             }
             
             // Vérifier que la réservation appartient à l'utilisateur
-            $reservation = getReservation($pdo, $id, $current_user_id);
+            $stmt = $pdo->prepare("SELECT * FROM reservations WHERE id = ? AND customer_id = ?");
+            $stmt->execute([$id, $current_user_id]);
+            $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+            
             if (!$reservation) {
                 http_response_code(404);
                 echo json_encode(['success' => false, 'message' => 'Réservation non trouvée']);
@@ -396,6 +458,7 @@ try {
             $date = $_GET['date'] ?? '';
             $time = $_GET['time'] ?? '';
             $party_size = isset($_GET['party_size']) ? (int)$_GET['party_size'] : 2;
+            $table_id = isset($_GET['table_id']) ? (int)$_GET['table_id'] : 0;
             
             if (empty($date)) {
                 throw new Exception('Date requise');
@@ -413,7 +476,7 @@ try {
             
             if (!empty($time)) {
                 // Vérifier un créneau spécifique
-                $available = checkAvailability($pdo, $date, $time);
+                $available = checkAvailability($pdo, $date, $time, null, $table_id);
                 echo json_encode([
                     'success' => true, 
                     'available' => $available,
@@ -422,12 +485,13 @@ try {
                 ]);
             } else {
                 // Lister tous les créneaux disponibles pour cette date
-                $available_slots = getAvailableTimeSlots($pdo, $date, $party_size);
+                $available_slots = getAvailableTimeSlots($pdo, $date, $party_size, null, $table_id);
                 echo json_encode([
                     'success' => true, 
                     'available_slots' => $available_slots,
                     'date' => $date,
-                    'party_size' => $party_size
+                    'party_size' => $party_size,
+                    'table_id' => $table_id
                 ]);
             }
             break;
@@ -449,38 +513,62 @@ function getReservation($pdo, $reservation_id, $user_id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function checkAvailability($pdo, $date, $time, $exclude_id = null) {
-    // Capacité maximale du restaurant par créneau
-    $max_capacity = 20; // À ajuster selon votre restaurant
-    
-    $sql = "SELECT SUM(party_size) as total_guests 
-            FROM reservations 
-            WHERE reservation_date = ? 
-            AND reservation_time = ? 
-            AND status IN ('confirmed', 'pending')";
-    
-    $params = [$date, $time];
-    
-    if ($exclude_id) {
-        $sql .= " AND id != ?";
-        $params[] = $exclude_id;
+function checkAvailability($pdo, $date, $time, $exclude_id = null, $table_id = 0) {
+    // Si une table spécifique est demandée
+    if ($table_id > 0) {
+        $sql = "SELECT COUNT(*) as count 
+                FROM reservations 
+                WHERE reservation_date = ? 
+                AND reservation_time = ? 
+                AND table_id = ?
+                AND status IN ('confirmed', 'pending')";
+        
+        $params = [$date, $time, $table_id];
+        
+        if ($exclude_id) {
+            $sql .= " AND id != ?";
+            $params[] = $exclude_id;
+        }
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // La table est disponible si aucune réservation ne l'utilise à ce créneau
+        return ($result['count'] ?? 0) == 0;
+    } else {
+        // Capacité maximale du restaurant par créneau
+        $max_capacity = 20;
+        
+        $sql = "SELECT SUM(party_size) as total_guests 
+                FROM reservations 
+                WHERE reservation_date = ? 
+                AND reservation_time = ? 
+                AND status IN ('confirmed', 'pending')";
+        
+        $params = [$date, $time];
+        
+        if ($exclude_id) {
+            $sql .= " AND id != ?";
+            $params[] = $exclude_id;
+        }
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return ($result['total_guests'] ?? 0) < $max_capacity;
     }
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    return ($result['total_guests'] ?? 0) < $max_capacity;
 }
 
-function getAvailableTimeSlots($pdo, $date, $party_size, $exclude_id = null) {
+function getAvailableTimeSlots($pdo, $date, $party_size, $exclude_id = null, $table_id = 0) {
     $available_slots = [];
     
-    // Heures d'ouverture du restaurant (à ajuster selon votre restaurant)
+    // Heures d'ouverture du restaurant
     $opening_time = '12:00';
     $closing_time = '23:59';
     
-    // Générer tous les créneaux possibles (toutes les 30 minutes)
+    // Générer tous les créneaux possibles
     $current = strtotime($date . ' ' . $opening_time);
     $end = strtotime($date . ' ' . $closing_time);
     
@@ -488,8 +576,19 @@ function getAvailableTimeSlots($pdo, $date, $party_size, $exclude_id = null) {
         $slot = date('H:i', $current);
         
         // Vérifier la disponibilité pour ce créneau
-        if (checkAvailability($pdo, $date, $slot, $exclude_id)) {
-            $available_slots[] = $slot;
+        if (checkAvailability($pdo, $date, $slot, $exclude_id, $table_id)) {
+            // Si une table est spécifiée, vérifier aussi sa capacité
+            if ($table_id > 0) {
+                $stmt = $pdo->prepare("SELECT capacity FROM tables WHERE id = ?");
+                $stmt->execute([$table_id]);
+                $table = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($table && $party_size <= $table['capacity']) {
+                    $available_slots[] = $slot;
+                }
+            } else {
+                $available_slots[] = $slot;
+            }
         }
         
         $current = strtotime('+30 minutes', $current);

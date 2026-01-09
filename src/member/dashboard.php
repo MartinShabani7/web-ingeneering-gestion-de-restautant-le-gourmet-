@@ -2,8 +2,8 @@
 // session_start();
 require_once '../config/database.php';
 require_once '../config/security.php';
-include 'header_navbar.php'; 
-// include 'jenga.php';
+// include 'header_navbar.php'; 
+include 'jenga.php';
 // include 'navbar.php';
 // include 'm.php';
 // include 'egal_profil.php';

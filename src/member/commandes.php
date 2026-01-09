@@ -1,8 +1,45 @@
 <?php
+session_start();
+require_once '../config/database.php';
+require_once '../config/security.php';
 
-// include 'header_navbar.php';
+if (!Security::isLoggedIn()) {
+    Security::redirect('../auth/login.php');
+}
 
-include 'jenga.php';
+// Récupérer l'ID de l'utilisateur connecté
+$user_id = $_SESSION['user_id'];
+
+// Récupérer les commandes de l'utilisateur
+$orders = [];
+
+try {
+    // Récupérer les commandes avec les détails
+    $stmt = $pdo->prepare("
+        SELECT 
+            o.id,
+            o.order_number,
+            o.order_type,
+            o.table_number,
+            o.status,
+            o.payment_status,
+            o.total_amount,
+            o.notes,
+            o.created_at,
+            COUNT(oi.id) as items_count
+        FROM orders o
+        LEFT JOIN order_items oi ON o.id = oi.order_id
+        WHERE o.customer_id = ?
+        GROUP BY o.id
+        ORDER BY o.created_at DESC
+    ");
+    
+    $stmt->execute([$user_id]);
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch (Exception $e) {
+    error_log("Erreur lors de la récupération des commandes: " . $e->getMessage());
+}
 
 // Fonction pour traduire les statuts
 function translateStatus($status) {
@@ -12,7 +49,8 @@ function translateStatus($status) {
         'preparing' => 'En préparation',
         'ready' => 'Prête',
         'served' => 'Servie',
-        'cancelled' => 'Annulée'
+        'cancelled' => 'Annulée',
+        'completed' => 'Terminée'
     ];
     return $translations[$status] ?? $status;
 }
@@ -21,7 +59,8 @@ function translatePaymentStatus($status) {
     $translations = [
         'pending' => 'En attente',
         'paid' => 'Payée',
-        'refunded' => 'Remboursée'
+        'refunded' => 'Remboursée',
+        'partially_paid' => 'Partiellement payée'
     ];
     return $translations[$status] ?? $status;
 }
@@ -34,6 +73,9 @@ function translateOrderType($type) {
     ];
     return $translations[$type] ?? $type;
 }
+
+// include 'header_navbar.php';
+include 'jenga.php';
 ?>
     <style>
         #container{
@@ -104,7 +146,7 @@ function translateOrderType($type) {
                                     </div>
                                     <span class="badge bg-<?= 
                                         $order['status'] === 'cancelled' ? 'danger' : 
-                                        ($order['status'] === 'served' || $order['status'] === 'ready' ? 'success' : 
+                                        ($order['status'] === 'served' || $order['status'] === 'ready' || $order['status'] === 'completed' ? 'success' : 
                                         ($order['status'] === 'preparing' ? 'warning' : 
                                         ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?> status-badge">
                                         <?= translateStatus($order['status']) ?>
@@ -142,14 +184,15 @@ function translateOrderType($type) {
                                         <small class="text-muted d-block">Paiement</small>
                                         <span class="d-block badge bg-<?= 
                                             $order['payment_status'] === 'paid' ? 'success' : 
-                                            ($order['payment_status'] === 'refunded' ? 'info' : 'warning') ?>">
+                                            ($order['payment_status'] === 'refunded' ? 'info' : 
+                                            ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
                                             <?= translatePaymentStatus($order['payment_status']) ?>
                                         </span>
                                     </div>
                                     <div class="text-end">
                                         <small class="text-muted d-block">Total</small>
                                         <span class="price-highlight text-primary">
-                                            <?= number_format($order['total_amount'], 2, ',', ' ') ?> €
+                                            <?= number_format($order['total_amount'], 2, ',', ' ') ?> $
                                         </span>
                                     </div>
                                 </div>
@@ -178,7 +221,7 @@ function translateOrderType($type) {
                 <?php endforeach; ?>
             </div>
 
-            <!-- Vue tableau (optionnel, pour une alternative) -->
+            <!-- Vue tableau -->
             <div class="card mt-4 d-none d-lg-block">
                 <div class="card-body">
                     <h6 class="card-subtitle mb-3 text-muted">Vue détaillée</h6>
@@ -217,7 +260,7 @@ function translateOrderType($type) {
                                         <td>
                                             <span class="badge bg-<?= 
                                                 $order['status'] === 'cancelled' ? 'danger' : 
-                                                ($order['status'] === 'served' || $order['status'] === 'ready' ? 'success' : 
+                                                ($order['status'] === 'served' || $order['status'] === 'ready' || $order['status'] === 'completed' ? 'success' : 
                                                 ($order['status'] === 'preparing' ? 'warning' : 
                                                 ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?>">
                                                 <?= translateStatus($order['status']) ?>
@@ -226,7 +269,8 @@ function translateOrderType($type) {
                                         <td>
                                             <span class="badge bg-<?= 
                                                 $order['payment_status'] === 'paid' ? 'success' : 
-                                                ($order['payment_status'] === 'refunded' ? 'info' : 'warning') ?>">
+                                                ($order['payment_status'] === 'refunded' ? 'info' : 
+                                                ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
                                                 <?= translatePaymentStatus($order['payment_status']) ?>
                                             </span>
                                         </td>
@@ -247,7 +291,6 @@ function translateOrderType($type) {
     </div>
 </div>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <script>
         // Option pour basculer entre les vues
         document.addEventListener('DOMContentLoaded', function() {

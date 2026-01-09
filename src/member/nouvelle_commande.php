@@ -55,7 +55,7 @@ try {
     $stmt = $pdo->query("
         SELECT id, table_name, capacity, location 
         FROM tables 
-        WHERE is_available = 1 AND status = 'available' 
+        WHERE is_available = 1
         ORDER BY table_name
     ");
     $tables = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -63,15 +63,7 @@ try {
     error_log("Erreur lors de la récupération des tables: " . $e->getMessage());
 }
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouvelle commande - Le Gourmet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+
     <style>
         .product-card {
             transition: transform 0.2s, box-shadow 0.2s;
@@ -213,8 +205,9 @@ try {
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
     </style>
-</head>
-<body class="bg-light">
+<?php include 'jenga.php'; ?>
+
+<div id="container" class="bg-light">
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3 mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Nouvelle commande</h1>
@@ -286,6 +279,31 @@ try {
                                     <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
                                 </div>
                             </div>
+
+                            <!-- <div id="dineInInfo">
+                                <div class="mb-3">
+                                    <label class="form-label">Table</label>
+                                    <select class="form-control" name="table_number" id="tableSelect">
+                                        <option value="">-- Sélectionnez une table --</option>
+                                        <?php if (empty($tables)): ?>
+                                            <option value="" disabled>Aucune table disponible - Contactez le serveur</option>
+                                        <?php else: ?>
+                                            <?php foreach ($tables as $table): ?>
+                                                <option value="<?= htmlspecialchars($table['table_name']) ?>"
+                                                        data-id="<?= $table['id'] ?>"
+                                                        data-capacity="<?= $table['capacity'] ?>">
+                                                    <?= htmlspecialchars($table['table_name']) ?> 
+                                                    (<?= $table['capacity'] ?> pers.)
+                                                    <?php if (!empty($table['location'])): ?>
+                                                        - <?= htmlspecialchars($table['location']) ?>
+                                                    <?php endif; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
+                                </div>
+                            </div> -->
 
                             <!-- À emporter - Heure de récupération -->
                             <div id="takeawayInfo" style="display: none;">
@@ -360,7 +378,10 @@ try {
                                             <div class="col">
                                                 <div class="card product-card h-100">
                                                     <?php if (!empty($product['image'])): ?>
-                                                        <img src="../uploads/products/<?= htmlspecialchars($product['image']) ?>" 
+
+                                                        <!-- Ajout de la vérification de l'existence de l'image
+                                                         et utilisation de la fonction basename pour obtenir le nom de l'image -->
+                                                        <img src="<?= '../uploads/products/' . htmlspecialchars(basename($product['image'])) ?>" 
                                                              class="product-image" 
                                                              alt="<?= htmlspecialchars($product['name']) ?>">
                                                     <?php else: ?>
@@ -663,7 +684,7 @@ try {
                                                 <label class="form-label">Numéro de téléphone</label>
                                                 <input type="tel" class="form-control" 
                                                     name="mobile_number"
-                                                    placeholder="Ex: +243 81 234 5678"
+                                                    placeholder="Ex: +243 973 900 115"
                                                     oninput="formatPhoneNumber(this)">
                                             </div>
                                             
@@ -728,6 +749,7 @@ try {
             </div>
         </div>
     </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <script>
@@ -1803,5 +1825,3 @@ try {
             }
         });
     </script>
-</body>
-</html>

@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // Si vous utilisez Composer, utilisez l'autoload
-require_once '../../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 class Mailer {
     // Configuration SMTP (à adapter en PROD)

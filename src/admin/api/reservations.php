@@ -36,16 +36,26 @@ try {
 
     $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
-
     switch ($action) {
         case 'list':
             $status = $_GET['status'] ?? '';
             $date = $_GET['date'] ?? '';
 
-            $sql = "SELECT r.*, u.first_name, u.last_name, u.email FROM reservations r LEFT JOIN users u ON u.id = r.customer_id WHERE 1";
+            // Ajout de la jointure avec tables
+            $sql = "SELECT r.*, u.first_name, u.last_name, u.email, t.table_name 
+                    FROM reservations r 
+                    LEFT JOIN users u ON u.id = r.customer_id 
+                    LEFT JOIN tables t ON r.table_id = t.id 
+                    WHERE 1";
             $params = [];
-            if ($status !== '') { $sql .= " AND r.status = ?"; $params[] = $status; }
-            if ($date !== '') { $sql .= " AND r.reservation_date = ?"; $params[] = $date; }
+            if ($status !== '') { 
+                $sql .= " AND r.status = ?"; 
+                $params[] = $status; 
+            }
+            if ($date !== '') { 
+                $sql .= " AND r.reservation_date = ?"; 
+                $params[] = $date; 
+            }
             $sql .= " ORDER BY r.reservation_date DESC, r.reservation_time DESC LIMIT 200";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
@@ -53,42 +63,75 @@ try {
             break;
 
         case 'create':
-            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { throw new Exception('Token CSRF invalide'); }
+            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { 
+                throw new Exception('Token CSRF invalide'); 
+            }
             $customer_name = Security::sanitizeInput($_POST['customer_name'] ?? '');
             $customer_email = Security::sanitizeInput($_POST['customer_email'] ?? '');
             $customer_phone = Security::sanitizeInput($_POST['customer_phone'] ?? '');
             $reservation_date = $_POST['reservation_date'] ?? '';
             $reservation_time = $_POST['reservation_time'] ?? '';
             $party_size = (int)($_POST['party_size'] ?? 1);
-            $table_number = Security::sanitizeInput($_POST['table_number'] ?? '');
+            $table_id = isset($_POST['table_id']) ? (int)$_POST['table_id'] : 0; // Changé
             $special_requests = Security::sanitizeInput($_POST['special_requests'] ?? '');
 
             if ($customer_name === '' || $reservation_date === '' || $reservation_time === '' || $party_size <= 0) {
                 throw new Exception('Champs requis manquants');
             }
 
-            $stmt = $pdo->prepare("INSERT INTO reservations (customer_name, customer_email, customer_phone, reservation_date, reservation_time, party_size, status, special_requests, table_number, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())");
-            $stmt->execute([$customer_name, $customer_email, $customer_phone, $reservation_date, $reservation_time, $party_size, $special_requests, $table_number ?: null]);
+            // Gestion de la table
+            $table_value = ($table_id > 0) ? $table_id : null;
+
+            $stmt = $pdo->prepare("INSERT INTO reservations (customer_name, customer_email, customer_phone, reservation_date, reservation_time, party_size, status, special_requests, table_id, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())");
+            $stmt->execute([$customer_name, $customer_email, $customer_phone, $reservation_date, $reservation_time, $party_size, $special_requests, $table_value]);
             echo json_encode(['success' => true, 'message' => 'Réservation ajoutée']);
             break;
 
         case 'update':
-            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { throw new Exception('Token CSRF invalide'); }
+            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { 
+                throw new Exception('Token CSRF invalide'); 
+            }
             $id = (int)($_POST['id'] ?? 0);
-            if ($id <= 0) { throw new Exception('ID invalide'); }
-            $fields = ['customer_name','customer_email','customer_phone','reservation_date','reservation_time','party_size','status','special_requests','table_number'];
+            if ($id <= 0) { 
+                throw new Exception('ID invalide'); 
+            }
+            
+            // Changé table_number en table_id
+            $fields = ['customer_name','customer_email','customer_phone','reservation_date','reservation_time','party_size','status','special_requests','table_id'];
             $data = [];
-            foreach ($fields as $f) { $data[$f] = Security::sanitizeInput($_POST[$f] ?? ''); }
+            foreach ($fields as $f) { 
+                $data[$f] = Security::sanitizeInput($_POST[$f] ?? ''); 
+            }
             $data['party_size'] = (int)($_POST['party_size'] ?? 1);
-            $stmt = $pdo->prepare("UPDATE reservations SET customer_name=?, customer_email=?, customer_phone=?, reservation_date=?, reservation_time=?, party_size=?, status=?, special_requests=?, table_number=?, updated_at = NOW() WHERE id=?");
-            $stmt->execute([$data['customer_name'],$data['customer_email'],$data['customer_phone'],$data['reservation_date'],$data['reservation_time'],$data['party_size'],$data['status'],$data['special_requests'],$data['table_number'] ?: null,$id]);
+            $data['table_id'] = isset($_POST['table_id']) ? (int)$_POST['table_id'] : 0;
+            
+            // Convertir 0 en null
+            $table_value = ($data['table_id'] > 0) ? $data['table_id'] : null;
+
+            $stmt = $pdo->prepare("UPDATE reservations SET customer_name=?, customer_email=?, customer_phone=?, reservation_date=?, reservation_time=?, party_size=?, status=?, special_requests=?, table_id=?, updated_at = NOW() WHERE id=?");
+            $stmt->execute([
+                $data['customer_name'],
+                $data['customer_email'],
+                $data['customer_phone'],
+                $data['reservation_date'],
+                $data['reservation_time'],
+                $data['party_size'],
+                $data['status'],
+                $data['special_requests'],
+                $table_value,
+                $id
+            ]);
             echo json_encode(['success' => true, 'message' => 'Réservation mise à jour']);
             break;
 
         case 'delete':
-            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { throw new Exception('Token CSRF invalide'); }
+            if (!Security::verifyCSRFToken($_POST['csrf_token'] ?? '')) { 
+                throw new Exception('Token CSRF invalide'); 
+            }
             $id = (int)($_POST['id'] ?? 0);
-            if ($id <= 0) { throw new Exception('ID invalide'); }
+            if ($id <= 0) { 
+                throw new Exception('ID invalide'); 
+            }
             $stmt = $pdo->prepare('DELETE FROM reservations WHERE id = ?');
             $stmt->execute([$id]);
             echo json_encode(['success' => true, 'message' => 'Réservation supprimée']);

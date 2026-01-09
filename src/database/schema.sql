@@ -473,6 +473,20 @@ CREATE TABLE partenaires (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Supprimez la colonne table_number
+ALTER TABLE reservations DROP COLUMN table_number;
+
+-- Ajoutez la colonne table_id avec clé étrangère
+ALTER TABLE reservations ADD COLUMN table_id INT NULL AFTER special_requests;
+
+-- Ajoutez la clé étrangère
+ALTER TABLE reservations 
+ADD CONSTRAINT fk_reservations_table_id 
+FOREIGN KEY (table_id) 
+REFERENCES tables(id) 
+ON DELETE SET NULL;
+
+
 -- Mise à jour de la table report_templates pour renommer certaines colennes
 UPDATE report_templates 
 SET sql_query = 'SELECT 
