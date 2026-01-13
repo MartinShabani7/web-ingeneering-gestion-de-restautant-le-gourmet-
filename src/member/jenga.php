@@ -289,7 +289,7 @@ $userAvatarUrl = getAvatarUrl($user['avatar'] ?? '');
         }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
@@ -422,7 +422,7 @@ $userAvatarUrl = getAvatarUrl($user['avatar'] ?? '');
                 <!-- Ici sera inclus le contenu de perfil.php -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/main.js"></script>
+    <!-- <script src="../assets/js/main.js"></script> -->
     <script>
         function togglePassword(fieldId) {
             const field = document.getElementById(fieldId);

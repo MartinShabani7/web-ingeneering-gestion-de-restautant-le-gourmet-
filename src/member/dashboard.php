@@ -70,16 +70,18 @@ $monthStats = $stmt->fetch();
 ?>
 
 <style>
-    #container{
-        margin-left:265px;
-        margin-top:40px;
-    }
+    .containere {
+    margin-left: 265px;
+    margin-top: 40px;
+    overflow-x: hidden; /* Empêche le défilement horizontal */
+    /* max-width: 100%; Assure que le contenu ne dépasse pas */
+}
 </style>
 
-    <div id="container" class="container">
-        <!-- <div class="row" style ="width:100%"> -->
+    <div id="container" class="container containere overflow-x-hidden">
+        <div class="row" style ="width:100%">
             <!-- Contenu principal -->
-            <div class="col-md-12 col-lg-12 dashboard-content">
+            <div class="col-md-11 col-lg-10 dashboard-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Bienvenue <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>!!</h1>
                     <h5 class="mb-0">Membre depuis le  
@@ -288,7 +290,7 @@ $monthStats = $stmt->fetch();
                     </div>
                 </div>
             </div>
-        <!-- </div> -->
+        </div>
     </div>
 
 <?php include 'footer.php'?>

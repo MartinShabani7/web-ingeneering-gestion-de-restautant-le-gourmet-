@@ -76,6 +76,12 @@ try {
 ?>
 <?php include 'jenga.php'; ?>
     <style>
+        .containere {
+            margin-left: 265px;
+            margin-top: 40px;
+            overflow-x: hidden; /* Empêche le défilement horizontal */
+            /* max-width: 100%; Assure que le contenu ne dépasse pas */
+        }
         .available-slot { cursor: pointer; }
         .available-slot:hover { background-color: #e8f5e9 !important; }
         .slot-selected { background-color: #4caf50 !important; color: white; }
@@ -162,188 +168,193 @@ try {
         }
     </style>
 
-<div id="container" class="bg-light">
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <!-- MODIFIER LE TITRE -->
-            <h1 class="h4 mb-0">
-                <i class="fas fa-<?= $editMode ? 'edit' : 'calendar-plus' ?> me-2 text-primary"></i>
-                <?= $editMode ? 'Modifier la réservation' : 'Nouvelle réservation' ?>
-            </h1>
-            <a class="btn btn-outline-secondary" href="reservations.php">
-                <i class="fas fa-arrow-left me-1"></i>Retour
-            </a>
-        </div>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <!-- Contenu principal -->
+        <div class="col-md-11 col-lg-10 nouvelle_reservation-content">
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <!-- MODIFIER LE TITRE -->
+                    <h1 class="h4 mb-0">
+                        <i class="fas fa-<?= $editMode ? 'edit' : 'calendar-plus' ?> me-2 text-primary"></i>
+                        <?= $editMode ? 'Modifier la réservation' : 'Nouvelle réservation' ?>
+                    </h1>
+                    <a class="btn btn-outline-secondary" href="reservations.php">
+                        <i class="fas fa-arrow-left me-1"></i>Retour
+                    </a>
+                </div>
 
-        <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show mb-3">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <?= $_SESSION['error_message'] ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php unset($_SESSION['error_message']); ?>
-        <?php endif; ?>
+                <?php if (isset($_SESSION['error_message'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <?= $_SESSION['error_message'] ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php unset($_SESSION['error_message']); ?>
+                <?php endif; ?>
 
-        <div class="card">
-            <div class="card-body">
-                <form id="reservationForm" class="row g-3">
-                    <input type="hidden" name="csrf_token" value="<?= Security::generateCSRFToken() ?>">
-                    
-                    <!-- AJOUTER LE CHAMP HIDDEN POUR L'ÉDITION -->
-                    <?php if ($editMode && $reservationToEdit): ?>
-                        <input type="hidden" name="reservation_id" value="<?= $reservationToEdit['id'] ?>">
-                    <?php endif; ?>
-                    
-                    <div class="col-md-6">
-                        <label class="form-label">Nom complet *</label>
-                        <input class="form-control" name="customer_name" value="<?= htmlspecialchars($user_name) ?>" required>
-                        <small class="text-muted">Ce champ est pré-rempli avec votre nom</small>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="form-label">Email *</label>
-                        <input type="email" class="form-control" name="customer_email" value="<?= htmlspecialchars($user_email) ?>" required>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="form-label">Téléphone</label>
-                        <input class="form-control" name="customer_phone" 
-                               placeholder="Votre numéro de téléphone"
-                               value="<?= htmlspecialchars($customer_phone) ?>">
-                    </div>
-                    
-                    <div class="col-md-3">
-                        <label class="form-label">Date *</label>
-                        <!-- MODIFIER LA VALEUR PAR DÉFAUT -->
-                        <input type="date" class="form-control" name="reservation_date" 
-                               min="<?= date('Y-m-d') ?>" 
-                               value="<?= $default_date ?>" 
-                               required id="datePicker">
-                    </div>
-                    
-                    <div class="col-md-3">
-                        <label class="form-label">Nombre de personnes *</label>
-                        <!-- MODIFIER POUR PRÉ-SÉLECTIONNER -->
-                        <select class="form-control" name="party_size" id="partySize" required>
-                            <?php for ($i = 1; $i <= 12; $i++): ?>
-                                <option value="<?= $i ?>" <?= ($i == $default_party_size) ? 'selected' : '' ?>>
-                                    <?= $i ?> personne<?= $i > 1 ? 's' : '' ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="col-12">
-                        <label class="form-label">Heure *</label>
-                        <div id="timeSlots" class="d-flex flex-wrap gap-2 mb-3">
-                            <div class="text-muted">Sélectionnez d'abord une date et le nombre de personnes</div>
-                        </div>
-                        <input type="hidden" name="reservation_time" id="selectedTime" required 
-                               value="<?= htmlspecialchars($reservation_time) ?>">
-                        <div id="loading" class="spinner-border spinner-border-sm text-primary" role="status">
-                            <span class="visually-hidden">Chargement...</span>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="form-label">Table préférée</label>
-                        <select class="form-control" name="table_id" id="tableSelect">
-                            <option value="">-- Aucune préférence --</option>
-                            <?php foreach ($tables as $table): ?>
-                                <option value="<?= $table['id'] ?>" 
-                                        <?= ($editMode && $table['id'] == $table_id) ? 'selected' : '' ?>
-                                        data-name="<?= htmlspecialchars($table['table_name']) ?>"
-                                        data-capacity="<?= $table['capacity'] ?>"
-                                        data-location="<?= htmlspecialchars($table['location']) ?>"
-                                        data-image="<?= htmlspecialchars($table['image']) ?>">
-                                    <?= htmlspecialchars($table['table_name']) ?> 
-                                    <span class="table-info">
-                                        <span class="table-capacity"><?= $table['capacity'] ?> pers.</span>
-                                        <?php if (!empty($table['location'])): ?>
-                                            <span class="table-location"><?= htmlspecialchars($table['location']) ?></span>
-                                        <?php endif; ?>
-                                        <span class="table-available">Disponible</span>
-                                    </span>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div id="tablePreview">
-                            <?php if (!empty($tables[0]['image'])): ?>
-                                <img src="../uploads/tables/<?= htmlspecialchars($tables[0]['image']) ?>" 
-                                     alt="Table <?= htmlspecialchars($tables[0]['table_name']) ?>" 
-                                     class="table-preview-image">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="reservationForm" class="row g-3">
+                            <input type="hidden" name="csrf_token" value="<?= Security::generateCSRFToken() ?>">
+                            
+                            <!-- AJOUTER LE CHAMP HIDDEN POUR L'ÉDITION -->
+                            <?php if ($editMode && $reservationToEdit): ?>
+                                <input type="hidden" name="reservation_id" value="<?= $reservationToEdit['id'] ?>">
                             <?php endif; ?>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div><strong>Capacité:</strong> <span id="tableCapacity"></span> personnes</div>
-                                    <div><strong>Emplacement:</strong> <span id="tableLocation"></span></div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Nom complet *</label>
+                                <input class="form-control" name="customer_name" value="<?= htmlspecialchars($user_name) ?>" required>
+                                <small class="text-muted">Ce champ est pré-rempli avec votre nom</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="customer_email" value="<?= htmlspecialchars($user_email) ?>" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Téléphone</label>
+                                <input class="form-control" name="customer_phone" 
+                                    placeholder="Votre numéro de téléphone"
+                                    value="<?= htmlspecialchars($customer_phone) ?>">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Date *</label>
+                                <!-- MODIFIER LA VALEUR PAR DÉFAUT -->
+                                <input type="date" class="form-control" name="reservation_date" 
+                                    min="<?= date('Y-m-d') ?>" 
+                                    value="<?= $default_date ?>" 
+                                    required id="datePicker">
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <label class="form-label">Nombre de personnes *</label>
+                                <!-- MODIFIER POUR PRÉ-SÉLECTIONNER -->
+                                <select class="form-control" name="party_size" id="partySize" required>
+                                    <?php for ($i = 1; $i <= 12; $i++): ?>
+                                        <option value="<?= $i ?>" <?= ($i == $default_party_size) ? 'selected' : '' ?>>
+                                            <?= $i ?> personne<?= $i > 1 ? 's' : '' ?>
+                                        </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Heure *</label>
+                                <div id="timeSlots" class="d-flex flex-wrap gap-2 mb-3">
+                                    <div class="text-muted">Sélectionnez d'abord une date et le nombre de personnes</div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div><strong>Statut:</strong> <span class="text-success">Disponible</span></div>
-                                    <div><strong>ID:</strong> <span id="tableId"></span></div>
+                                <input type="hidden" name="reservation_time" id="selectedTime" required 
+                                    value="<?= htmlspecialchars($reservation_time) ?>">
+                                <div id="loading" class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
                                 </div>
                             </div>
-                        </div>
-                        <small class="text-muted">Choisissez une table ou laissez "Aucune préférence"</small>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label class="form-label">Tables compatibles avec votre groupe</label>
-                        <div id="compatibleTables" class="alert alert-light">
-                            <div class="small">
-                                <?php foreach ($tables as $table): ?>
-                                    <?php if ($table['capacity'] >= $default_party_size): ?>
-                                        <div class="compatible-table" 
-                                             data-table-name="<?= htmlspecialchars($table['table_name']) ?>"
-                                             data-table-id="<?= $table['id'] ?>"
-                                             data-capacity="<?= $table['capacity'] ?>"
-                                             data-location="<?= htmlspecialchars($table['location']) ?>">
-                                            <div class="table-item">
-                                                <?php if (!empty($table['image'])): ?>
-                                                    <img src="../uploads/tables/<?= htmlspecialchars($table['image']) ?>" 
-                                                         alt="Table <?= htmlspecialchars($table['table_name']) ?>" 
-                                                         class="table-image">
-                                                <?php else: ?>
-                                                    <i class="fas fa-table table-icon"></i>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Table préférée</label>
+                                <select class="form-control" name="table_id" id="tableSelect">
+                                    <option value="">-- Aucune préférence --</option>
+                                    <?php foreach ($tables as $table): ?>
+                                        <option value="<?= $table['id'] ?>" 
+                                                <?= ($editMode && $table['id'] == $table_id) ? 'selected' : '' ?>
+                                                data-name="<?= htmlspecialchars($table['table_name']) ?>"
+                                                data-capacity="<?= $table['capacity'] ?>"
+                                                data-location="<?= htmlspecialchars($table['location']) ?>"
+                                                data-image="<?= htmlspecialchars($table['image']) ?>">
+                                            <?= htmlspecialchars($table['table_name']) ?> 
+                                            <span class="table-info">
+                                                <span class="table-capacity"><?= $table['capacity'] ?> pers.</span>
+                                                <?php if (!empty($table['location'])): ?>
+                                                    <span class="table-location"><?= htmlspecialchars($table['location']) ?></span>
                                                 <?php endif; ?>
-                                                <div class="table-details">
-                                                    <strong><?= htmlspecialchars($table['table_name']) ?></strong>
-                                                    <div>
-                                                        <span class="table-capacity"><?= $table['capacity'] ?> pers.</span>
-                                                        <?php if (!empty($table['location'])): ?>
-                                                            <span class="table-location"><?= htmlspecialchars($table['location']) ?></span>
+                                                <span class="table-available">Disponible</span>
+                                            </span>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div id="tablePreview">
+                                    <?php if (!empty($tables[0]['image'])): ?>
+                                        <img src="../uploads/tables/<?= htmlspecialchars($tables[0]['image']) ?>" 
+                                            alt="Table <?= htmlspecialchars($tables[0]['table_name']) ?>" 
+                                            class="table-preview-image">
+                                    <?php endif; ?>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div><strong>Capacité:</strong> <span id="tableCapacity"></span> personnes</div>
+                                            <div><strong>Emplacement:</strong> <span id="tableLocation"></span></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div><strong>Statut:</strong> <span class="text-success">Disponible</span></div>
+                                            <div><strong>ID:</strong> <span id="tableId"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Choisissez une table ou laissez "Aucune préférence"</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Tables compatibles avec votre groupe</label>
+                                <div id="compatibleTables" class="alert alert-light">
+                                    <div class="small">
+                                        <?php foreach ($tables as $table): ?>
+                                            <?php if ($table['capacity'] >= $default_party_size): ?>
+                                                <div class="compatible-table" 
+                                                    data-table-name="<?= htmlspecialchars($table['table_name']) ?>"
+                                                    data-table-id="<?= $table['id'] ?>"
+                                                    data-capacity="<?= $table['capacity'] ?>"
+                                                    data-location="<?= htmlspecialchars($table['location']) ?>">
+                                                    <div class="table-item">
+                                                        <?php if (!empty($table['image'])): ?>
+                                                            <img src="../uploads/tables/<?= htmlspecialchars($table['image']) ?>" 
+                                                                alt="Table <?= htmlspecialchars($table['table_name']) ?>" 
+                                                                class="table-image">
+                                                        <?php else: ?>
+                                                            <i class="fas fa-table table-icon"></i>
                                                         <?php endif; ?>
+                                                        <div class="table-details">
+                                                            <strong><?= htmlspecialchars($table['table_name']) ?></strong>
+                                                            <div>
+                                                                <span class="table-capacity"><?= $table['capacity'] ?> pers.</span>
+                                                                <?php if (!empty($table['location'])): ?>
+                                                                    <span class="table-location"><?= htmlspecialchars($table['location']) ?></span>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Demandes spéciales</label>
+                                <textarea class="form-control" name="special_requests" rows="3" 
+                                        placeholder="Allergies, anniversaire, etc."><?= htmlspecialchars($special_requests) ?></textarea>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Les réservations doivent être faites au moins 2 heures à l'avance.
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 d-flex justify-content-end gap-2">
+                                <a href="reservations.php" class="btn btn-outline-secondary">Annuler</a>
+                                <button class="btn btn-primary" type="submit" id="submitBtn">
+                                    <i class="fas fa-save me-1"></i>
+                                    <?= $editMode ? 'Mettre à jour' : 'Réserver' ?>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    
-                    <div class="col-12">
-                        <label class="form-label">Demandes spéciales</label>
-                        <textarea class="form-control" name="special_requests" rows="3" 
-                                  placeholder="Allergies, anniversaire, etc."><?= htmlspecialchars($special_requests) ?></textarea>
-                    </div>
-                    
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Les réservations doivent être faites au moins 2 heures à l'avance.
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 d-flex justify-content-end gap-2">
-                        <a href="reservations.php" class="btn btn-outline-secondary">Annuler</a>
-                        <button class="btn btn-primary" type="submit" id="submitBtn">
-                            <i class="fas fa-save me-1"></i>
-                            <?= $editMode ? 'Mettre à jour' : 'Réserver' ?>
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

@@ -45,162 +45,179 @@ try {
 }
 ?>
 <?php include 'jenga.php'; ?>
-<div id="container" class="bg-light">
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h4 mb-0"><i class="fas fa-calendar me-2 text-primary"></i>Mes réservations</h1>
-            <div>
-                <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
-                <a class="btn btn-primary" href="nouvelle_reservation.php"><i class="fas fa-plus me-1"></i>Réserver</a>
-            </div>
-        </div>
 
-        <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="alert alert-success alert-dismissible fade show">
-                <i class="fas fa-check-circle me-2"></i>
-                <?= $_SESSION['success_message'] ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php unset($_SESSION['success_message']); ?>
-        <?php endif; ?>
+<style>
+    .containere {
+    margin-left: 265px;
+    margin-top: 40px;
+    overflow-x: hidden; /* Empêche le défilement horizontal */
+    /* max-width: 100%; Assure que le contenu ne dépasse pas */
+}
+</style>
 
-        <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <?= $_SESSION['error_message'] ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <?php unset($_SESSION['error_message']); ?>
-        <?php endif; ?>
 
-        <?php if (isset($error_message)): ?>
-            <div class="alert alert-danger mb-3">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <?= $error_message ?>
-            </div>
-        <?php endif; ?>
 
-        <div class="card">
-            <div class="card-body">
-                <?php if (empty($reservations)): ?>
-                    <div class="text-center text-muted py-5">
-                        <i class="fas fa-calendar-times fa-4x mb-3 text-light"></i>
-                        <h5 class="mb-2">Aucune réservation</h5>
-                        <p class="mb-0">Vous n'avez pas encore fait de réservation.</p>
-                        <a href="nouvelle_reservation.php" class="btn btn-primary mt-3">
-                            <i class="fas fa-plus me-1"></i>Faire une réservation
-                        </a>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <!-- Contenu principal -->
+        <div class="col-md-11 col-lg-10 reservation-content">
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="h4 mb-0"><i class="fas fa-calendar me-2 text-primary"></i>Mes réservations</h1>
+                    <div>
+                        <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
+                        <a class="btn btn-primary" href="nouvelle_reservation.php"><i class="fas fa-plus me-1"></i>Réserver</a>
                     </div>
-                <?php else: ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Heure</th>
-                                    <th>Personnes</th>
-                                    <th>Table</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($reservations as $r): 
-                                    $reservationDateTime = strtotime($r['reservation_date'] . ' ' . $r['reservation_time']);
-                                    $canCancel = ($r['status'] === 'pending' || $r['status'] === 'confirmed') && $reservationDateTime > time();
-                                    $canEdit = ($r['status'] === 'pending') && $reservationDateTime > (time() + 3600); // 1 heure avant
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <?= date('d/m/Y', strtotime($r['reservation_date'])) ?>
-                                            <?php if (strtotime($r['reservation_date']) == strtotime('today')): ?>
-                                                <span class="badge bg-info">Aujourd'hui</span>
-                                            <?php elseif (strtotime($r['reservation_date']) == strtotime('tomorrow')): ?>
-                                                <span class="badge bg-primary">Demain</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= date('H:i', strtotime($r['reservation_time'])) ?></td>
-                                        <td>
-                                            <?= (int)$r['party_size'] ?> pers.
-                                            <?php if ($r['table_capacity'] && $r['party_size'] > $r['table_capacity']): ?>
-                                                <br><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> Capacité dépassée</small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?= htmlspecialchars($r['table_name'] ?? '-') ?>
-                                            <?php if (!empty($r['table_capacity'])): ?>
-                                                <br><small class="text-muted">(<?= $r['table_capacity'] ?> pers.)</small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-<?= 
-                                                $r['status'] === 'confirmed' ? 'success' : 
-                                                ($r['status'] === 'cancelled' ? 'danger' : 
-                                                ($r['status'] === 'completed' ? 'secondary' : 'warning')) ?>">
-                                                <?= $r['status'] === 'confirmed' ? 'Confirmée' : 
-                                                   ($r['status'] === 'cancelled' ? 'Annulée' : 
-                                                   ($r['status'] === 'completed' ? 'Terminée' : 'En attente')) ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <!-- Bouton Voir - sans AJAX d'abord -->
-                                                <!-- <button type="button" 
-                                                        class="btn btn-outline-info view-details-btn" 
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#viewReservationModal"
-                                                        data-id="<?= $r['id'] ?>"
-                                                        data-date="<?= date('d/m/Y', strtotime($r['reservation_date'])) ?>"
-                                                        data-time="<?= date('H:i', strtotime($r['reservation_time'])) ?>"
-                                                        data-party="<?= $r['party_size'] ?>"
-                                                        data-table="<?= htmlspecialchars($r['table_name'] ?? 'Non assignée') ?>"
-                                                        data-capacity="<?= $r['table_capacity'] ?>"
-                                                        data-status="<?= $r['status'] ?>"
-                                                        data-requests="<?= htmlspecialchars($r['special_requests'] ?? '') ?>"
-                                                        data-created="<?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>"
-                                                        title="Voir les détails">
-                                                    <i class="fas fa-eye"></i>
-                                                </button> -->
+                </div>
 
-                                                <!-- Bouton Voir avec Ajax -->
+                <?php if (isset($_SESSION['success_message'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <?= $_SESSION['success_message'] ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php unset($_SESSION['success_message']); ?>
+                <?php endif; ?>
 
-                                                <button type="button" 
-                                                        class="btn btn-outline-info view-details-btn" 
-                                                        data-id="<?= $r['id'] ?>"
-                                                        title="Voir les détails">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                
-                                                <?php if ($canEdit): ?>
-                                                    <a href="nouvelle_reservation.php?edit=<?= $r['id'] ?>" 
-                                                       class="btn btn-outline-primary" 
-                                                       title="Modifier">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                <?php endif; ?>
-                                                
-                                                <?php if ($canCancel): ?>
-                                                    <a href="reservations.php?action=cancel&id=<?= $r['id'] ?>" 
-                                                       class="btn btn-outline-danger cancel-btn"
-                                                       onclick="return confirmCancel('<?= date('d/m/Y H:i', $reservationDateTime) ?>')"
-                                                       title="Annuler">
-                                                        <i class="fas fa-times"></i>
-                                                    </a>
-                                                <?php endif; ?>
-                                                
-                                                <?php if (!$canCancel && $r['status'] === 'cancelled'): ?>
-                                                    <span class="text-muted small">Annulée</span>
-                                                <?php elseif (!$canCancel && $r['status'] === 'completed'): ?>
-                                                    <span class="text-muted small">Terminée</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                <?php if (isset($_SESSION['error_message'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <?= $_SESSION['error_message'] ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <?php unset($_SESSION['error_message']); ?>
+                <?php endif; ?>
+
+                <?php if (isset($error_message)): ?>
+                    <div class="alert alert-danger mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <?= $error_message ?>
                     </div>
                 <?php endif; ?>
+
+                <div class="card">
+                    <div class="card-body">
+                        <?php if (empty($reservations)): ?>
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-calendar-times fa-4x mb-3 text-light"></i>
+                                <h5 class="mb-2">Aucune réservation</h5>
+                                <p class="mb-0">Vous n'avez pas encore fait de réservation.</p>
+                                <a href="nouvelle_reservation.php" class="btn btn-primary mt-3">
+                                    <i class="fas fa-plus me-1"></i>Faire une réservation
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Heure</th>
+                                            <th>Personnes</th>
+                                            <th>Table</th>
+                                            <th>Statut</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($reservations as $r): 
+                                            $reservationDateTime = strtotime($r['reservation_date'] . ' ' . $r['reservation_time']);
+                                            $canCancel = ($r['status'] === 'pending' || $r['status'] === 'confirmed') && $reservationDateTime > time();
+                                            $canEdit = ($r['status'] === 'pending') && $reservationDateTime > (time() + 3600); // 1 heure avant
+                                        ?>
+                                            <tr>
+                                                <td>
+                                                    <?= date('d/m/Y', strtotime($r['reservation_date'])) ?>
+                                                    <?php if (strtotime($r['reservation_date']) == strtotime('today')): ?>
+                                                        <span class="badge bg-info">Aujourd'hui</span>
+                                                    <?php elseif (strtotime($r['reservation_date']) == strtotime('tomorrow')): ?>
+                                                        <span class="badge bg-primary">Demain</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?= date('H:i', strtotime($r['reservation_time'])) ?></td>
+                                                <td>
+                                                    <?= (int)$r['party_size'] ?> pers.
+                                                    <?php if ($r['table_capacity'] && $r['party_size'] > $r['table_capacity']): ?>
+                                                        <br><small class="text-warning"><i class="fas fa-exclamation-triangle"></i> Capacité dépassée</small>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?= htmlspecialchars($r['table_name'] ?? '-') ?>
+                                                    <?php if (!empty($r['table_capacity'])): ?>
+                                                        <br><small class="text-muted">(<?= $r['table_capacity'] ?> pers.)</small>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<?= 
+                                                        $r['status'] === 'confirmed' ? 'success' : 
+                                                        ($r['status'] === 'cancelled' ? 'danger' : 
+                                                        ($r['status'] === 'completed' ? 'secondary' : 'warning')) ?>">
+                                                        <?= $r['status'] === 'confirmed' ? 'Confirmée' : 
+                                                        ($r['status'] === 'cancelled' ? 'Annulée' : 
+                                                        ($r['status'] === 'completed' ? 'Terminée' : 'En attente')) ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <!-- Bouton Voir - sans AJAX d'abord -->
+                                                        <!-- <button type="button" 
+                                                                class="btn btn-outline-info view-details-btn" 
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#viewReservationModal"
+                                                                data-id="<?= $r['id'] ?>"
+                                                                data-date="<?= date('d/m/Y', strtotime($r['reservation_date'])) ?>"
+                                                                data-time="<?= date('H:i', strtotime($r['reservation_time'])) ?>"
+                                                                data-party="<?= $r['party_size'] ?>"
+                                                                data-table="<?= htmlspecialchars($r['table_name'] ?? 'Non assignée') ?>"
+                                                                data-capacity="<?= $r['table_capacity'] ?>"
+                                                                data-status="<?= $r['status'] ?>"
+                                                                data-requests="<?= htmlspecialchars($r['special_requests'] ?? '') ?>"
+                                                                data-created="<?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>"
+                                                                title="Voir les détails">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button> -->
+
+                                                        <!-- Bouton Voir avec Ajax -->
+
+                                                        <button type="button" 
+                                                                class="btn btn-outline-info view-details-btn" 
+                                                                data-id="<?= $r['id'] ?>"
+                                                                title="Voir les détails">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        
+                                                        <?php if ($canEdit): ?>
+                                                            <a href="nouvelle_reservation.php?edit=<?= $r['id'] ?>" 
+                                                            class="btn btn-outline-primary" 
+                                                            title="Modifier">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                        
+                                                        <?php if ($canCancel): ?>
+                                                            <a href="reservations.php?action=cancel&id=<?= $r['id'] ?>" 
+                                                            class="btn btn-outline-danger cancel-btn"
+                                                            onclick="return confirmCancel('<?= date('d/m/Y H:i', $reservationDateTime) ?>')"
+                                                            title="Annuler">
+                                                                <i class="fas fa-times"></i>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                        
+                                                        <?php if (!$canCancel && $r['status'] === 'cancelled'): ?>
+                                                            <span class="text-muted small">Annulée</span>
+                                                        <?php elseif (!$canCancel && $r['status'] === 'completed'): ?>
+                                                            <span class="text-muted small">Terminée</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -267,7 +284,7 @@ try {
 
 <!-- Modal pour voir les détails de la réservation  avec ajax-->
 <div class="modal fade" id="viewReservationModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Détails de la réservation</h5>

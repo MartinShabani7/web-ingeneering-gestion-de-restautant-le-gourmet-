@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'header_navbar.php';
+include 'jenga.php';
 ?>
 
     <style>
@@ -93,7 +93,7 @@ include 'header_navbar.php';
 
     <div class="container mt-4" id='container'>
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <!-- En-tête -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1>

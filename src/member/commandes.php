@@ -106,188 +106,193 @@ include 'jenga.php';
         }
     </style>
 
-<div id="container" class="container">
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h4 mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Mes commandes</h1>
-            <div>
-                <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
-                <a class="btn btn-primary" href="nouvelle_commande.php"><i class="fas fa-plus me-1"></i>Nouvelle commande</a>
-            </div>
-        </div>
-
-        <?php if (empty($orders)): ?>
-            <div class="card">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Aucune commande</h5>
-                    <p class="text-muted mb-0">Vous n'avez pas encore passé de commande.</p>
-                    <a href="nouvelle_commande.php" class="btn btn-primary mt-3">Passer ma première commande</a>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <!-- Contenu principal -->
+        <div class="col-md-11 col-lg-10 commande-content">
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h4 mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Mes commandes</h1>
+                    <div>
+                        <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
+                        <a class="btn btn-primary" href="nouvelle_commande.php"><i class="fas fa-plus me-1"></i>Nouvelle commande</a>
+                    </div>
                 </div>
-            </div>
-        <?php else: ?>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <?php foreach ($orders as $order): ?>
-                    <div class="col">
-                        <div class="card order-card h-100 <?= htmlspecialchars($order['order_type']) ?>">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <h5 class="card-title mb-1">
-                                            <span class="order-type-icon bg-<?= $order['order_type'] === 'dine_in' ? 'primary' : ($order['order_type'] === 'takeaway' ? 'secondary' : 'success') ?> text-white">
-                                                <i class="fas fa-<?= $order['order_type'] === 'dine_in' ? 'utensils' : ($order['order_type'] === 'takeaway' ? 'shopping-bag' : 'truck') ?>"></i>
-                                            </span>
-                                            Commande #<?= htmlspecialchars($order['order_number']) ?>
-                                        </h5>
-                                        <small class="text-muted">
-                                            <i class="far fa-calendar me-1"></i>
-                                            <?= date('d/m/Y H:i', strtotime($order['created_at'])) ?>
-                                        </small>
-                                    </div>
-                                    <span class="badge bg-<?= 
-                                        $order['status'] === 'cancelled' ? 'danger' : 
-                                        ($order['status'] === 'served' || $order['status'] === 'ready' || $order['status'] === 'completed' ? 'success' : 
-                                        ($order['status'] === 'preparing' ? 'warning' : 
-                                        ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?> status-badge">
-                                        <?= translateStatus($order['status']) ?>
-                                    </span>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted d-block">Type</small>
-                                        <span class="d-block">
-                                            <?= translateOrderType($order['order_type']) ?>
-                                        </span>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted d-block">Articles</small>
-                                        <span class="d-block">
-                                            <i class="fas fa-boxes me-1"></i>
-                                            <?= (int)$order['items_count'] ?> article(s)
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <?php if ($order['order_type'] === 'dine_in' && !empty($order['table_number'])): ?>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Table</small>
-                                        <span class="d-block">
-                                            <i class="fas fa-chair me-1"></i>
-                                            Table #<?= htmlspecialchars($order['table_number']) ?>
-                                        </span>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                                    <div>
-                                        <small class="text-muted d-block">Paiement</small>
-                                        <span class="d-block badge bg-<?= 
-                                            $order['payment_status'] === 'paid' ? 'success' : 
-                                            ($order['payment_status'] === 'refunded' ? 'info' : 
-                                            ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
-                                            <?= translatePaymentStatus($order['payment_status']) ?>
-                                        </span>
-                                    </div>
-                                    <div class="text-end">
-                                        <small class="text-muted d-block">Total</small>
-                                        <span class="price-highlight text-primary">
-                                            <?= number_format($order['total_amount'], 2, ',', ' ') ?> $
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <?php if (!empty($order['notes'])): ?>
-                                    <div class="mt-3 pt-3 border-top">
-                                        <small class="text-muted d-block mb-1">Notes</small>
-                                        <p class="mb-0 small"><?= nl2br(htmlspecialchars($order['notes'])) ?></p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="card-footer bg-transparent border-top-0 pt-0">
-                                <div class="d-flex justify-content-between">
-                                    <a href="details_commande.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye me-1"></i>Détails
-                                    </a>
-                                    <?php if ($order['status'] === 'pending' || $order['status'] === 'confirmed'): ?>
-                                        <a href="annuler_commande.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Annuler cette commande ?')">
-                                            <i class="fas fa-times me-1"></i>Annuler
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                <?php if (empty($orders)): ?>
+                    <div class="card">
+                        <div class="card-body text-center py-5">
+                            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucune commande</h5>
+                            <p class="text-muted mb-0">Vous n'avez pas encore passé de commande.</p>
+                            <a href="nouvelle_commande.php" class="btn btn-primary mt-3">Passer ma première commande</a>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Vue tableau -->
-            <div class="card mt-4 d-none d-lg-block">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-3 text-muted">Vue détaillée</h6>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>N° Commande</th>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Table</th>
-                                    <th>Articles</th>
-                                    <th>Statut</th>
-                                    <th>Paiement</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($orders as $order): ?>
-                                    <tr>
-                                        <td>
-                                            <strong>#<?= htmlspecialchars($order['order_number']) ?></strong>
-                                        </td>
-                                        <td>
-                                            <?= date('d/m/Y', strtotime($order['created_at'])) ?><br>
-                                            <small class="text-muted"><?= date('H:i', strtotime($order['created_at'])) ?></small>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-<?= $order['order_type'] === 'dine_in' ? 'primary' : ($order['order_type'] === 'takeaway' ? 'secondary' : 'success') ?>">
-                                                <?= translateOrderType($order['order_type']) ?>
-                                            </span>
-                                        </td>
-                                        <td><?= !empty($order['table_number']) ? htmlspecialchars($order['table_number']) : '-' ?></td>
-                                        <td><?= (int)$order['items_count'] ?></td>
-                                        <td>
+                <?php else: ?>
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        <?php foreach ($orders as $order): ?>
+                            <div class="col">
+                                <div class="card order-card h-100 <?= htmlspecialchars($order['order_type']) ?>">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h5 class="card-title mb-1">
+                                                    <span class="order-type-icon bg-<?= $order['order_type'] === 'dine_in' ? 'primary' : ($order['order_type'] === 'takeaway' ? 'secondary' : 'success') ?> text-white">
+                                                        <i class="fas fa-<?= $order['order_type'] === 'dine_in' ? 'utensils' : ($order['order_type'] === 'takeaway' ? 'shopping-bag' : 'truck') ?>"></i>
+                                                    </span>
+                                                    Commande #<?= htmlspecialchars($order['order_number']) ?>
+                                                </h5>
+                                                <small class="text-muted">
+                                                    <i class="far fa-calendar me-1"></i>
+                                                    <?= date('d/m/Y H:i', strtotime($order['created_at'])) ?>
+                                                </small>
+                                            </div>
                                             <span class="badge bg-<?= 
                                                 $order['status'] === 'cancelled' ? 'danger' : 
                                                 ($order['status'] === 'served' || $order['status'] === 'ready' || $order['status'] === 'completed' ? 'success' : 
                                                 ($order['status'] === 'preparing' ? 'warning' : 
-                                                ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?>">
+                                                ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?> status-badge">
                                                 <?= translateStatus($order['status']) ?>
                                             </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-<?= 
-                                                $order['payment_status'] === 'paid' ? 'success' : 
-                                                ($order['payment_status'] === 'refunded' ? 'info' : 
-                                                ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
-                                                <?= translatePaymentStatus($order['payment_status']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="fw-bold"><?= number_format($order['total_amount'], 2, ',', ' ') ?> $</td>
-                                        <td>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <small class="text-muted d-block">Type</small>
+                                                <span class="d-block">
+                                                    <?= translateOrderType($order['order_type']) ?>
+                                                </span>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted d-block">Articles</small>
+                                                <span class="d-block">
+                                                    <i class="fas fa-boxes me-1"></i>
+                                                    <?= (int)$order['items_count'] ?> article(s)
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <?php if ($order['order_type'] === 'dine_in' && !empty($order['table_number'])): ?>
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block">Table</small>
+                                                <span class="d-block">
+                                                    <i class="fas fa-chair me-1"></i>
+                                                    Table #<?= htmlspecialchars($order['table_number']) ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                            <div>
+                                                <small class="text-muted d-block">Paiement</small>
+                                                <span class="d-block badge bg-<?= 
+                                                    $order['payment_status'] === 'paid' ? 'success' : 
+                                                    ($order['payment_status'] === 'refunded' ? 'info' : 
+                                                    ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
+                                                    <?= translatePaymentStatus($order['payment_status']) ?>
+                                                </span>
+                                            </div>
+                                            <div class="text-end">
+                                                <small class="text-muted d-block">Total</small>
+                                                <span class="price-highlight text-primary">
+                                                    <?= number_format($order['total_amount'], 2, ',', ' ') ?> $
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <?php if (!empty($order['notes'])): ?>
+                                            <div class="mt-3 pt-3 border-top">
+                                                <small class="text-muted d-block mb-1">Notes</small>
+                                                <p class="mb-0 small"><?= nl2br(htmlspecialchars($order['notes'])) ?></p>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-top-0 pt-0">
+                                        <div class="d-flex justify-content-between">
                                             <a href="details_commande.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-eye me-1"></i>Détails
                                             </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                            <?php if ($order['status'] === 'pending' || $order['status'] === 'confirmed'): ?>
+                                                <a href="annuler_commande.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Annuler cette commande ?')">
+                                                    <i class="fas fa-times me-1"></i>Annuler
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
+
+                    <!-- Vue tableau -->
+                    <div class="card mt-4 d-none d-lg-block">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-3 text-muted">Vue détaillée</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Commande</th>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Table</th>
+                                            <th>Articles</th>
+                                            <th>Statut</th>
+                                            <th>Paiement</th>
+                                            <th>Total</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($orders as $order): ?>
+                                            <tr>
+                                                <td>
+                                                    <strong>#<?= htmlspecialchars($order['order_number']) ?></strong>
+                                                </td>
+                                                <td>
+                                                    <?= date('d/m/Y', strtotime($order['created_at'])) ?><br>
+                                                    <small class="text-muted"><?= date('H:i', strtotime($order['created_at'])) ?></small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<?= $order['order_type'] === 'dine_in' ? 'primary' : ($order['order_type'] === 'takeaway' ? 'secondary' : 'success') ?>">
+                                                        <?= translateOrderType($order['order_type']) ?>
+                                                    </span>
+                                                </td>
+                                                <td><?= !empty($order['table_number']) ? htmlspecialchars($order['table_number']) : '-' ?></td>
+                                                <td><?= (int)$order['items_count'] ?></td>
+                                                <td>
+                                                    <span class="badge bg-<?= 
+                                                        $order['status'] === 'cancelled' ? 'danger' : 
+                                                        ($order['status'] === 'served' || $order['status'] === 'ready' || $order['status'] === 'completed' ? 'success' : 
+                                                        ($order['status'] === 'preparing' ? 'warning' : 
+                                                        ($order['status'] === 'confirmed' ? 'info' : 'secondary'))) ?>">
+                                                        <?= translateStatus($order['status']) ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<?= 
+                                                        $order['payment_status'] === 'paid' ? 'success' : 
+                                                        ($order['payment_status'] === 'refunded' ? 'info' : 
+                                                        ($order['payment_status'] === 'partially_paid' ? 'warning' : 'secondary')) ?>">
+                                                        <?= translatePaymentStatus($order['payment_status']) ?>
+                                                    </span>
+                                                </td>
+                                                <td class="fw-bold"><?= number_format($order['total_amount'], 2, ',', ' ') ?> $</td>
+                                                <td>
+                                                    <a href="details_commande.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 
