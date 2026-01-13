@@ -49,7 +49,7 @@ try {
 <style>
     .containere {
     margin-left: 265px;
-    margin-top: 40px;
+    margin-top: 30px;
     overflow-x: hidden; /* Empêche le défilement horizontal */
     /* max-width: 100%; Assure que le contenu ne dépasse pas */
 }
@@ -303,146 +303,8 @@ try {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Fonction pour confirmer l'annulation - SIMPLIFIÉE
-    // function confirmCancel(dateTime) {
-    //     return confirm(`Voulez-vous vraiment annuler votre réservation du ${dateTime} ?\n\nCette action est irréversible.`);
-    // }
-    
-    // Gestion de la visualisation des détails sans ajax
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const viewModal = document.getElementById('viewReservationModal');
-    //     const viewButtons = document.querySelectorAll('.view-details-btn');
-        
-    //     viewButtons.forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             // Récupérer les données du bouton
-    //             const reservationId = this.getAttribute('data-id');
-    //             const date = this.getAttribute('data-date');
-    //             const time = this.getAttribute('data-time');
-    //             const partySize = this.getAttribute('data-party');
-    //             const tableName = this.getAttribute('data-table');
-    //             const tableCapacity = this.getAttribute('data-capacity');
-    //             const status = this.getAttribute('data-status');
-    //             const specialRequests = this.getAttribute('data-requests');
-    //             const createdAt = this.getAttribute('data-created');
-                
-    //             // Déterminer le texte et la couleur du statut
-    //             let statusText, statusClass;
-    //             switch(status) {
-    //                 case 'confirmed':
-    //                     statusText = 'Confirmée';
-    //                     statusClass = 'success';
-    //                     break;
-    //                 case 'cancelled':
-    //                     statusText = 'Annulée';
-    //                     statusClass = 'danger';
-    //                     break;
-    //                 case 'completed':
-    //                     statusText = 'Terminée';
-    //                     statusClass = 'secondary';
-    //                     break;
-    //                 default:
-    //                     statusText = 'En attente';
-    //                     statusClass = 'warning';
-    //             }
-                
-    //             // Déterminer si c'est aujourd'hui ou demain
-    //             const today = new Date();
-    //             const todayStr = today.getDate().toString().padStart(2, '0') + '/' + 
-    //                             (today.getMonth() + 1).toString().padStart(2, '0') + '/' + 
-    //                             today.getFullYear();
-                
-    //             const tomorrow = new Date();
-    //             tomorrow.setDate(tomorrow.getDate() + 1);
-    //             const tomorrowStr = tomorrow.getDate().toString().padStart(2, '0') + '/' + 
-    //                                (tomorrow.getMonth() + 1).toString().padStart(2, '0') + '/' + 
-    //                                tomorrow.getFullYear();
-                
-    //             let dateBadge = '';
-    //             if (date === todayStr) {
-    //                 dateBadge = '<span class="badge bg-info ms-2">Aujourd\'hui</span>';
-    //             } else if (date === tomorrowStr) {
-    //                 dateBadge = '<span class="badge bg-primary ms-2">Demain</span>';
-    //             }
-                
-    //             // Mettre à jour les informations dans le modal
-    //             document.getElementById('detailDate').textContent = date;
-    //             document.getElementById('detailDateBadge').innerHTML = dateBadge;
-    //             document.getElementById('detailTime').textContent = time;
-    //             document.getElementById('detailParty').textContent = partySize + ' personnes';
-    //             document.getElementById('detailCreated').textContent = createdAt;
-                
-    //             // Mettre à jour le statut
-    //             const statusSpan = document.getElementById('detailStatus');
-    //             statusSpan.innerHTML = `<span class="badge bg-${statusClass}">${statusText}</span>`;
-                
-    //             // Mettre à jour les informations de table
-    //             const tableInfoDiv = document.getElementById('detailTableInfo');
-    //             if (tableName && tableName !== 'Non assignée') {
-    //                 let tableHtml = `
-    //                     <div class="card border-primary">
-    //                         <div class="card-body">
-    //                             <h5 class="card-title">${tableName}</h5>
-    //                             <p class="card-text">
-    //                                 <i class="fas fa-chair me-1"></i>
-    //                                 Capacité : ${tableCapacity} personnes
-    //                             </p>`;
-                    
-    //                 // Avertissement si le nombre de personnes dépasse la capacité
-    //                 if (parseInt(tableCapacity) > 0 && parseInt(partySize) > parseInt(tableCapacity)) {
-    //                     tableHtml += `
-    //                         <div class="alert alert-warning mt-2 p-2">
-    //                             <i class="fas fa-exclamation-triangle me-1"></i>
-    //                             Le nombre de personnes (${partySize}) dépasse la capacité de la table (${tableCapacity})
-    //                         </div>`;
-    //                 }
-                    
-    //                 tableHtml += `</div></div>`;
-    //                 tableInfoDiv.innerHTML = tableHtml;
-    //             } else {
-    //                 tableInfoDiv.innerHTML = `
-    //                     <div class="alert alert-info">
-    //                         <i class="fas fa-info-circle me-2"></i>
-    //                         Aucune table spécifique assignée pour le moment
-    //                     </div>`;
-    //             }
-                
-    //             // Mettre à jour les demandes spéciales
-    //             const requestsDiv = document.getElementById('detailRequests');
-    //             const requestsText = document.getElementById('detailRequestsText');
-                
-    //             if (specialRequests && specialRequests.trim() !== '') {
-    //                 requestsDiv.style.display = 'block';
-    //                 requestsText.innerHTML = `<i class="fas fa-sticky-note me-2 text-muted"></i>${specialRequests.replace(/\n/g, '<br>')}`;
-    //             } else {
-    //                 requestsDiv.style.display = 'none';
-    //             }
-    //         });
-    //     });
-        
-    //     // Afficher les réservations passées avec un style différent
-    //     const rows = document.querySelectorAll('tbody tr');
-    //     const now = new Date();
-        
-    //     rows.forEach(row => {
-    //         const dateText = row.cells[0].textContent.trim();
-    //         const timeText = row.cells[1].textContent.trim();
-            
-    //         // Convertir la date au format YYYY-MM-DD
-    //         const dateParts = dateText.split('/');
-    //         if (dateParts.length === 3) {
-    //             const dateStr = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${timeText}`;
-    //             const reservationDate = new Date(dateStr);
-                
-    //             if (reservationDate < now) {
-    //                 row.style.opacity = '0.7';
-    //                 row.style.backgroundColor = '#f8f9fa';
-    //             }
-    //         }
-    //     });
-    // });
 
-    // Fonction pour confirmer l'annulation
+// Fonction pour confirmer l'annulation
     function confirmCancel(dateTime) {
         return confirm(`Voulez-vous vraiment annuler votre réservation du ${dateTime} ?\n\nCette action est irréversible.`);
     }

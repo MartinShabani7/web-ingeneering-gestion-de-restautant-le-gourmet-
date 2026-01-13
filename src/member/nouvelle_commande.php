@@ -1,15 +1,15 @@
 <?php
 // nouvelle_commande.php
-session_start();
+// session_start();
 require_once '../config/database.php';
 require_once '../config/security.php';
 
-if (!Security::isLoggedIn()) {
-    Security::redirect('../auth/login.php');
-}
+// if (!Security::isLoggedIn()) {
+//     Security::redirect('../auth/login.php');
+// }
 
 // Récupérer les informations utilisateur
-$user_id = $_SESSION['user_id'];
+// $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'] ?? '';
 $user_email = $_SESSION['user_email'] ?? '';
 $user_phone = $_SESSION['user_phone'] ?? '';
@@ -63,8 +63,14 @@ try {
     error_log("Erreur lors de la récupération des tables: " . $e->getMessage());
 }
 ?>
-
+<?php include 'jenga.php'; ?>
     <style>
+        .containere {
+            margin-left: 265px;
+            margin-top: 60px;
+            overflow-x: hidden; /* Empêche le défilement horizontal */
+            /* max-width: 100%; Assure que le contenu ne dépasse pas */
+        }
         .product-card {
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid #dee2e6;
@@ -205,527 +211,533 @@ try {
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
     </style>
-<?php include 'jenga.php'; ?>
 
-<div id="container" class="bg-light">
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Nouvelle commande</h1>
-            <div>
-                <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
-            </div>
-        </div>
 
-        <!-- Cart Preview (mobile) -->
-        <div class="card mb-4 d-md-none">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-shopping-cart me-2"></i>Panier</span>
-                <span class="badge bg-primary rounded-pill" id="mobileCartCount">0</span>
-            </div>
-            <div class="card-body p-0">
-                <div id="mobileCartPreview" class="cart-empty">
-                    <i class="fas fa-shopping-cart fa-2x mb-3"></i>
-                    <p class="mb-0">Votre panier est vide</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- Colonne produits -->
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Type de commande -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">Type de commande</label>
-                            <div class="btn-group w-100" role="group">
-                                <input type="radio" class="btn-check" name="order_type" id="dine_in" value="dine_in" checked>
-                                <label class="btn btn-outline-primary" for="dine_in">
-                                    <i class="fas fa-utensils me-2"></i>Sur place
-                                </label>
-                                
-                                <input type="radio" class="btn-check" name="order_type" id="takeaway" value="takeaway">
-                                <label class="btn btn-outline-primary" for="takeaway">
-                                    <i class="fas fa-shopping-bag me-2"></i>À emporter
-                                </label>
-                                
-                                <input type="radio" class="btn-check" name="order_type" id="delivery" value="delivery">
-                                <label class="btn btn-outline-primary" for="delivery">
-                                    <i class="fas fa-truck me-2"></i>Livraison
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Informations spécifiques -->
-                        <div id="orderTypeInfo">
-                            <!-- Sur place - Sélection de table -->
-                            <div id="dineInInfo">
-                                <div class="mb-3">
-                                    <label class="form-label">Table</label>
-                                    <select class="form-control" name="table_number" id="tableSelect">
-                                        <option value="">-- Sélectionnez une table --</option>
-                                        <?php foreach ($tables as $table): ?>
-                                            <option value="<?= htmlspecialchars($table['table_name']) ?>"
-                                                    data-id="<?= $table['id'] ?>"
-                                                    data-capacity="<?= $table['capacity'] ?>">
-                                                <?= htmlspecialchars($table['table_name']) ?> 
-                                                (<?= $table['capacity'] ?> pers.)
-                                                <?php if (!empty($table['location'])): ?>
-                                                    - <?= htmlspecialchars($table['location']) ?>
-                                                <?php endif; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
-                                </div>
-                            </div>
-
-                            <!-- <div id="dineInInfo">
-                                <div class="mb-3">
-                                    <label class="form-label">Table</label>
-                                    <select class="form-control" name="table_number" id="tableSelect">
-                                        <option value="">-- Sélectionnez une table --</option>
-                                        <?php if (empty($tables)): ?>
-                                            <option value="" disabled>Aucune table disponible - Contactez le serveur</option>
-                                        <?php else: ?>
-                                            <?php foreach ($tables as $table): ?>
-                                                <option value="<?= htmlspecialchars($table['table_name']) ?>"
-                                                        data-id="<?= $table['id'] ?>"
-                                                        data-capacity="<?= $table['capacity'] ?>">
-                                                    <?= htmlspecialchars($table['table_name']) ?> 
-                                                    (<?= $table['capacity'] ?> pers.)
-                                                    <?php if (!empty($table['location'])): ?>
-                                                        - <?= htmlspecialchars($table['location']) ?>
-                                                    <?php endif; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                    <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
-                                </div>
-                            </div> -->
-
-                            <!-- À emporter - Heure de récupération -->
-                            <div id="takeawayInfo" style="display: none;">
-                                <div class="mb-3">
-                                    <label class="form-label">Heure de récupération souhaitée</label>
-                                    <input type="time" class="form-control" name="pickup_time" 
-                                           min="<?= date('H:i', strtotime('+30 minutes')) ?>"
-                                           value="<?= date('H:i', strtotime('+45 minutes')) ?>">
-                                    <small class="text-muted">Préparation minimum : 30 minutes</small>
-                                </div>
-                            </div>
-
-                            <!-- Livraison - Adresse -->
-                            <div id="deliveryInfo" style="display: none;">
-                                <div class="delivery-info">
-                                    <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Adresse de livraison</h6>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Adresse</label>
-                                            <input type="text" class="form-control" name="delivery_address" 
-                                                   placeholder="Numéro et rue">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Code postal</label>
-                                            <input type="text" class="form-control" name="delivery_zipcode" 
-                                                   placeholder="75000">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Ville</label>
-                                            <input type="text" class="form-control" name="delivery_city" 
-                                                   placeholder="Paris">
-                                        </div>
-                                    </div>
-                                    <div class="mt-3">
-                                        <label class="form-label">Instructions de livraison</label>
-                                        <textarea class="form-control" name="delivery_notes" rows="2" 
-                                                  placeholder="Code d'entrée, étage, etc."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Onglets des catégories -->
-                        <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
-                            <?php $first = true; ?>
-                            <?php foreach ($products as $cat_id => $category): ?>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link <?= $first ? 'active' : '' ?>" 
-                                            id="tab-<?= $cat_id ?>" 
-                                            data-bs-toggle="tab" 
-                                            data-bs-target="#cat-<?= $cat_id ?>" 
-                                            type="button">
-                                        <?= htmlspecialchars($category['category_name']) ?>
-                                    </button>
-                                </li>
-                                <?php $first = false; ?>
-                            <?php endforeach; ?>
-                        </ul>
-
-                        <!-- Contenu des catégories -->
-                        <div class="tab-content" id="categoryTabContent">
-                            <?php $first = true; ?>
-                            <?php foreach ($products as $cat_id => $category): ?>
-                                <div class="tab-pane fade <?= $first ? 'show active' : '' ?>" 
-                                     id="cat-<?= $cat_id ?>" 
-                                     role="tabpanel">
-                                    
-                                    <h5 class="category-title"><?= htmlspecialchars($category['category_name']) ?></h5>
-                                    
-                                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                                        <?php foreach ($category['items'] as $product): ?>
-                                            <div class="col">
-                                                <div class="card product-card h-100">
-                                                    <?php if (!empty($product['image'])): ?>
-
-                                                        <!-- Ajout de la vérification de l'existence de l'image
-                                                         et utilisation de la fonction basename pour obtenir le nom de l'image -->
-                                                        <img src="<?= '../uploads/products/' . htmlspecialchars(basename($product['image'])) ?>" 
-                                                             class="product-image" 
-                                                             alt="<?= htmlspecialchars($product['name']) ?>">
-                                                    <?php else: ?>
-                                                        <div class="product-image bg-light d-flex align-items-center justify-content-center">
-                                                            <i class="fas fa-utensils fa-3x text-muted"></i>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    
-                                                    <div class="card-body">
-                                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                                            <h6 class="card-title mb-0"><?= htmlspecialchars($product['name']) ?></h6>
-                                                            <span class="product-price"><?= number_format($product['price'], 2, ',', ' ') ?> $</span>
-                                                        </div>
-                                                        
-                                                        <?php if (!empty($product['description'])): ?>
-                                                            <p class="card-text small text-muted mb-2">
-                                                                <?= htmlspecialchars($product['description']) ?>
-                                                            </p>
-                                                        <?php endif; ?>
-                                                        
-                                                        <?php if (!empty($product['ingredients'])): ?>
-                                                            <p class="product-ingredients mb-2">
-                                                                <small><?= htmlspecialchars($product['ingredients']) ?></small>
-                                                            </p>
-                                                        <?php endif; ?>
-                                                        
-                                                        <?php if (!empty($product['allergens'])): ?>
-                                                            <div class="mb-2">
-                                                                <?php 
-                                                                $allergens = explode(',', $product['allergens']);
-                                                                foreach ($allergens as $allergen):
-                                                                    if (trim($allergen)): ?>
-                                                                        <span class="badge allergen-badge bg-warning"><?= trim($allergen) ?></span>
-                                                                    <?php endif;
-                                                                endforeach; ?>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                        
-                                                        <?php if ($product['preparation_time']): ?>
-                                                            <div class="mb-3">
-                                                                <span class="badge badge-time">
-                                                                    <i class="fas fa-clock me-1"></i>
-                                                                    <?= $product['preparation_time'] ?> min
-                                                                </span>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                        
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <button class="btn btn-sm btn-outline-primary add-to-cart"
-                                                                    data-product-id="<?= $product['id'] ?>"
-                                                                    data-product-name="<?= htmlspecialchars($product['name']) ?>"
-                                                                    data-product-price="<?= $product['price'] ?>"
-                                                                    data-product-image="<?= htmlspecialchars($product['image'] ?? '') ?>">
-                                                                <i class="fas fa-plus me-1"></i>Ajouter
-                                                            </button>
-                                                            
-                                                            <div class="quantity-control d-none">
-                                                                <button class="btn btn-sm btn-outline-secondary quantity-btn minus">-</button>
-                                                                <span class="quantity">1</span>
-                                                                <button class="btn btn-sm btn-outline-secondary quantity-btn plus">+</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                                <?php $first = false; ?>
-                            <?php endforeach; ?>
-                        </div>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <!-- Contenu principal -->
+        <div class="col-md-11 col-lg-10 nouvelle_commande-content">
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Nouvelle commande</h1>
+                    <div>
+                        <a class="btn btn-outline-secondary me-2" href="dashboard.php"><i class="fas fa-arrow-left me-1"></i>Retour</a>
                     </div>
                 </div>
-            </div>
 
-            <!-- Colonne panier et résumé -->
-            <div class="col-lg-4">
-                <div class="order-summary">
-                    <h5 class="mb-4"><i class="fas fa-shopping-cart me-2"></i>Votre commande</h5>
-                    
-                    <!-- Liste des articles -->
-                    <div id="cartItems" class="mb-4">
-                        <div class="cart-empty">
+                <!-- Cart Preview (mobile) -->
+                <div class="card mb-4 d-md-none">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-shopping-cart me-2"></i>Panier</span>
+                        <span class="badge bg-primary rounded-pill" id="mobileCartCount">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="mobileCartPreview" class="cart-empty">
                             <i class="fas fa-shopping-cart fa-2x mb-3"></i>
                             <p class="mb-0">Votre panier est vide</p>
-                            <small class="text-muted">Ajoutez des produits pour commencer</small>
                         </div>
                     </div>
-                    
-                    <!-- Résumé -->
-                    <div id="orderSummary" style="display: none;">
-                        <div class="summary-item">
-                            <span>Sous-total</span>
-                            <span id="subtotal">0,00 $</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Service</span>
-                            <span id="serviceFee">0,00 $</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Livraison</span>
-                            <span id="deliveryFee">0,00 $</span>
-                        </div>
-                        <div class="summary-item summary-total">
-                            <span>Total</span>
-                            <span id="totalAmount">0,00 $</span>
-                        </div>
-                        
-                        <!-- Notes -->
-                        <div class="mt-4">
-                            <label class="form-label">Notes pour la commande</label>
-                            <textarea class="form-control" name="order_notes" rows="3" 
-                                      placeholder="Allergies, préférences, etc."></textarea>
-                        </div>
-                        
-                        <!-- Accordéon pour les options de paiement -->
-                        <!-- <div class="accordion mt-4" id="paymentAccordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" 
-                                            data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
-                                        <i class="fas fa-credit-card me-2"></i>Options de paiement
-                                    </button>
-                                </h2>
-                                <div id="paymentCollapse" class="accordion-collapse collapse" 
-                                     data-bs-parent="#paymentAccordion">
-                                    <div class="accordion-body">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" 
-                                                   name="payment_method" value="cash" id="cash" checked>
-                                            <label class="form-check-label" for="cash">
-                                                Paiement à la réception
-                                            </label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="radio" 
-                                                   name="payment_method" value="card" id="card">
-                                            <label class="form-check-label" for="card">
-                                                Carte bancaire
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" 
-                                                   name="payment_method" value="online" id="online">
-                                            <label class="form-check-label" for="online">
-                                                Paiement en ligne
-                                            </label>
-                                        </div>
+                </div>
+
+                <div class="row">
+                    <!-- Colonne produits -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Type de commande -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Type de commande</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <input type="radio" class="btn-check" name="order_type" id="dine_in" value="dine_in" checked>
+                                        <label class="btn btn-outline-primary" for="dine_in">
+                                            <i class="fas fa-utensils me-2"></i>Sur place
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="order_type" id="takeaway" value="takeaway">
+                                        <label class="btn btn-outline-primary" for="takeaway">
+                                            <i class="fas fa-shopping-bag me-2"></i>À emporter
+                                        </label>
+                                        
+                                        <input type="radio" class="btn-check" name="order_type" id="delivery" value="delivery">
+                                        <label class="btn btn-outline-primary" for="delivery">
+                                            <i class="fas fa-truck me-2"></i>Livraison
+                                        </label>
                                     </div>
                                 </div>
-                            </div>
-                        </div> -->
-                        <!-- Accordéon pour les options de paiement -->
-                        <div class="accordion mt-4" id="paymentAccordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" 
-                                            data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
-                                        <i class="fas fa-credit-card me-2"></i>Options de paiement
-                                    </button>
-                                </h2>
-                                <div id="paymentCollapse" class="accordion-collapse collapse" 
-                                    data-bs-parent="#paymentAccordion">
-                                    <div class="accordion-body">
-                                        <!-- Paiement à la réception -->
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input payment-method" type="radio" 
-                                                name="payment_method" value="cash" id="cash" checked>
-                                            <label class="form-check-label" for="cash">
-                                                <i class="fas fa-money-bill-wave me-2"></i>Paiement à la réception
-                                            </label>
+
+                                <!-- Informations spécifiques -->
+                                <div id="orderTypeInfo">
+                                    <!-- Sur place - Sélection de table -->
+                                    <div id="dineInInfo">
+                                        <div class="mb-3">
+                                            <label class="form-label">Table</label>
+                                            <select class="form-control" name="table_number" id="tableSelect">
+                                                <option value="">-- Sélectionnez une table --</option>
+                                                <?php foreach ($tables as $table): ?>
+                                                    <option value="<?= htmlspecialchars($table['table_name']) ?>"
+                                                            data-id="<?= $table['id'] ?>"
+                                                            data-capacity="<?= $table['capacity'] ?>">
+                                                        <?= htmlspecialchars($table['table_name']) ?> 
+                                                        (<?= $table['capacity'] ?> pers.)
+                                                        <?php if (!empty($table['location'])): ?>
+                                                            - <?= htmlspecialchars($table['location']) ?>
+                                                        <?php endif; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
                                         </div>
-                                        
-                                        <!-- Carte bancaire -->
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input payment-method" type="radio" 
-                                                name="payment_method" value="card" id="card">
-                                            <label class="form-check-label" for="card">
-                                                <i class="fas fa-credit-card me-2"></i>Carte bancaire
-                                            </label>
+                                    </div>
+
+                                    <!-- <div id="dineInInfo">
+                                        <div class="mb-3">
+                                            <label class="form-label">Table</label>
+                                            <select class="form-control" name="table_number" id="tableSelect">
+                                                <option value="">-- Sélectionnez une table --</option>
+                                                <?php if (empty($tables)): ?>
+                                                    <option value="" disabled>Aucune table disponible - Contactez le serveur</option>
+                                                <?php else: ?>
+                                                    <?php foreach ($tables as $table): ?>
+                                                        <option value="<?= htmlspecialchars($table['table_name']) ?>"
+                                                                data-id="<?= $table['id'] ?>"
+                                                                data-capacity="<?= $table['capacity'] ?>">
+                                                            <?= htmlspecialchars($table['table_name']) ?> 
+                                                            (<?= $table['capacity'] ?> pers.)
+                                                            <?php if (!empty($table['location'])): ?>
+                                                                - <?= htmlspecialchars($table['location']) ?>
+                                                            <?php endif; ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </select>
+                                            <small class="text-muted">La table sera attribuée automatiquement si non spécifiée</small>
                                         </div>
-                                        
-                                        <!-- Formulaire carte bancaire (caché par défaut) -->
-                                        <div id="cardPaymentForm" class="border rounded p-3 mb-3" style="display: none;">
-                                            <h6><i class="fas fa-credit-card me-2"></i>Informations de la carte</h6>
-                                            <div class="mb-3">
-                                                <label class="form-label">Numéro de carte</label>
-                                                <input type="text" class="form-control" 
-                                                    placeholder="1234 5678 9012 3456" 
-                                                    maxlength="19"
-                                                    oninput="formatCardNumber(this)">
-                                                <div class="form-text">Accepté: Visa, MasterCard, American Express</div>
-                                            </div>
+                                    </div> -->
+
+                                    <!-- À emporter - Heure de récupération -->
+                                    <div id="takeawayInfo" style="display: none;">
+                                        <div class="mb-3">
+                                            <label class="form-label">Heure de récupération souhaitée</label>
+                                            <input type="time" class="form-control" name="pickup_time" 
+                                                min="<?= date('H:i', strtotime('+30 minutes')) ?>"
+                                                value="<?= date('H:i', strtotime('+45 minutes')) ?>">
+                                            <small class="text-muted">Préparation minimum : 30 minutes</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Livraison - Adresse -->
+                                    <div id="deliveryInfo" style="display: none;">
+                                        <div class="delivery-info">
+                                            <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Adresse de livraison</h6>
                                             <div class="row g-3">
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Date d'expiration</label>
-                                                    <input type="text" class="form-control" 
-                                                        placeholder="MM/AA"
-                                                        maxlength="5"
-                                                        oninput="formatExpiryDate(this)">
+                                                    <label class="form-label">Adresse</label>
+                                                    <input type="text" class="form-control" name="delivery_address" 
+                                                        placeholder="Numéro et rue">
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <label class="form-label">CVV</label>
-                                                    <input type="password" class="form-control" 
-                                                        placeholder="123"
-                                                        maxlength="4"
-                                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Code postal</label>
+                                                    <input type="text" class="form-control" name="delivery_zipcode" 
+                                                        placeholder="75000">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="form-label">Ville</label>
+                                                    <input type="text" class="form-control" name="delivery_city" 
+                                                        placeholder="Paris">
                                                 </div>
                                             </div>
                                             <div class="mt-3">
-                                                <label class="form-label">Nom sur la carte</label>
-                                                <input type="text" class="form-control" 
-                                                    placeholder="JEAN DUPONT">
-                                            </div>
-                                            <div class="form-check mt-3">
-                                                <input type="checkbox" class="form-check-input" id="saveCard">
-                                                <label class="form-check-label" for="saveCard">
-                                                    Sauvegarder cette carte pour de futurs achats
-                                                </label>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Paiement en ligne -->
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input payment-method" type="radio" 
-                                                name="payment_method" value="online" id="online">
-                                            <label class="form-check-label" for="online">
-                                                <i class="fas fa-globe me-2"></i>Paiement en ligne
-                                            </label>
-                                        </div>
-                                        
-                                        <!-- Options paiement en ligne (caché par défaut) -->
-                                        <div id="onlinePaymentForm" class="border rounded p-3 mb-3" style="display: none;">
-                                            <h6><i class="fas fa-globe me-2"></i>Choisissez votre passerelle de paiement</h6>
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" 
-                                                            name="online_gateway" value="paypal" id="paypal">
-                                                        <label class="form-check-label" for="paypal">
-                                                            <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" 
-                                                                alt="PayPal" height="20" class="me-2">
-                                                            PayPal
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" 
-                                                            name="online_gateway" value="stripe" id="stripe">
-                                                        <label class="form-check-label" for="stripe">
-                                                            <i class="fab fa-stripe text-primary me-2"></i>Stripe
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" 
-                                                            name="online_gateway" value="paydunya" id="paydunya">
-                                                        <label class="form-check-label" for="paydunya">
-                                                            PayDunya
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="alert alert-info mt-3 small">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                Vous serez redirigé vers la plateforme de paiement sécurisée pour finaliser votre transaction.
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Mobile Money -->
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input payment-method" type="radio" 
-                                                name="payment_method" value="mobile_money" id="mobile_money">
-                                            <label class="form-check-label" for="mobile_money">
-                                                <i class="fas fa-mobile-alt me-2"></i>Mobile Money
-                                            </label>
-                                        </div>
-                                        
-                                        <!-- Formulaire Mobile Money (caché par défaut) -->
-                                        <div id="mobileMoneyForm" class="border rounded p-3" style="display: none;">
-                                            <h6><i class="fas fa-mobile-alt me-2"></i>Paiement par Mobile Money</h6>
-                                            
-                                            <!-- Sélection du réseau -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Réseau Mobile Money</label>
-                                                <select class="form-control" name="mobile_network" id="mobileNetwork">
-                                                    <option value="">-- Sélectionnez votre réseau --</option>
-                                                    <option value="mpesa">M-Pesa</option>
-                                                    <option value="airtel">Airtel Money</option>
-                                                    <option value="orange">Orange Money</option>
-                                                    <option value="afrimoney">Afrimoney</option>
-                                                    <option value="mtn">MTN Mobile Money</option>
-                                                </select>
-                                            </div>
-                                            
-                                            <!-- Numéro de téléphone -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Numéro de téléphone</label>
-                                                <input type="tel" class="form-control" 
-                                                    name="mobile_number"
-                                                    placeholder="Ex: +243 973 900 115"
-                                                    oninput="formatPhoneNumber(this)">
-                                            </div>
-                                            
-                                            <!-- Processus étape par étape -->
-                                            <div class="alert alert-warning small">
-                                                <h6><i class="fas fa-list-ol me-2"></i>Processus de paiement:</h6>
-                                                <ol class="mb-0">
-                                                    <li>Entrez votre numéro de téléphone Mobile Money</li>
-                                                    <li>Cliquez sur "Confirmer la commande"</li>
-                                                    <li>Vous recevrez une demande de paiement sur votre téléphone</li>
-                                                    <li>Validez le paiement sur votre application Mobile Money</li>
-                                                    <li>Votre commande sera confirmée automatiquement</li>
-                                                </ol>
-                                            </div>
-                                            
-                                            <!-- Frais de transaction -->
-                                            <div class="alert alert-info small mt-2">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                Des frais de transaction de 1% peuvent s'appliquer selon votre opérateur.
+                                                <label class="form-label">Instructions de livraison</label>
+                                                <textarea class="form-control" name="delivery_notes" rows="2" 
+                                                        placeholder="Code d'entrée, étage, etc."></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Onglets des catégories -->
+                                <ul class="nav nav-tabs" id="categoryTabs" role="tablist">
+                                    <?php $first = true; ?>
+                                    <?php foreach ($products as $cat_id => $category): ?>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link <?= $first ? 'active' : '' ?>" 
+                                                    id="tab-<?= $cat_id ?>" 
+                                                    data-bs-toggle="tab" 
+                                                    data-bs-target="#cat-<?= $cat_id ?>" 
+                                                    type="button">
+                                                <?= htmlspecialchars($category['category_name']) ?>
+                                            </button>
+                                        </li>
+                                        <?php $first = false; ?>
+                                    <?php endforeach; ?>
+                                </ul>
+
+                                <!-- Contenu des catégories -->
+                                <div class="tab-content" id="categoryTabContent">
+                                    <?php $first = true; ?>
+                                    <?php foreach ($products as $cat_id => $category): ?>
+                                        <div class="tab-pane fade <?= $first ? 'show active' : '' ?>" 
+                                            id="cat-<?= $cat_id ?>" 
+                                            role="tabpanel">
+                                            
+                                            <h5 class="category-title"><?= htmlspecialchars($category['category_name']) ?></h5>
+                                            
+                                            <div class="row row-cols-1 row-cols-md-2 g-4">
+                                                <?php foreach ($category['items'] as $product): ?>
+                                                    <div class="col">
+                                                        <div class="card product-card h-100">
+                                                            <?php if (!empty($product['image'])): ?>
+
+                                                                <!-- Ajout de la vérification de l'existence de l'image
+                                                                et utilisation de la fonction basename pour obtenir le nom de l'image -->
+                                                                <img src="<?= '../uploads/products/' . htmlspecialchars(basename($product['image'])) ?>" 
+                                                                    class="product-image" 
+                                                                    alt="<?= htmlspecialchars($product['name']) ?>">
+                                                            <?php else: ?>
+                                                                <div class="product-image bg-light d-flex align-items-center justify-content-center">
+                                                                    <i class="fas fa-utensils fa-3x text-muted"></i>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                            
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                    <h6 class="card-title mb-0"><?= htmlspecialchars($product['name']) ?></h6>
+                                                                    <span class="product-price"><?= number_format($product['price'], 2, ',', ' ') ?> $</span>
+                                                                </div>
+                                                                
+                                                                <?php if (!empty($product['description'])): ?>
+                                                                    <p class="card-text small text-muted mb-2">
+                                                                        <?= htmlspecialchars($product['description']) ?>
+                                                                    </p>
+                                                                <?php endif; ?>
+                                                                
+                                                                <?php if (!empty($product['ingredients'])): ?>
+                                                                    <p class="product-ingredients mb-2">
+                                                                        <small><?= htmlspecialchars($product['ingredients']) ?></small>
+                                                                    </p>
+                                                                <?php endif; ?>
+                                                                
+                                                                <?php if (!empty($product['allergens'])): ?>
+                                                                    <div class="mb-2">
+                                                                        <?php 
+                                                                        $allergens = explode(',', $product['allergens']);
+                                                                        foreach ($allergens as $allergen):
+                                                                            if (trim($allergen)): ?>
+                                                                                <span class="badge allergen-badge bg-warning"><?= trim($allergen) ?></span>
+                                                                            <?php endif;
+                                                                        endforeach; ?>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                
+                                                                <?php if ($product['preparation_time']): ?>
+                                                                    <div class="mb-3">
+                                                                        <span class="badge badge-time">
+                                                                            <i class="fas fa-clock me-1"></i>
+                                                                            <?= $product['preparation_time'] ?> min
+                                                                        </span>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <button class="btn btn-sm btn-outline-primary add-to-cart"
+                                                                            data-product-id="<?= $product['id'] ?>"
+                                                                            data-product-name="<?= htmlspecialchars($product['name']) ?>"
+                                                                            data-product-price="<?= $product['price'] ?>"
+                                                                            data-product-image="<?= htmlspecialchars($product['image'] ?? '') ?>">
+                                                                        <i class="fas fa-plus me-1"></i>Ajouter
+                                                                    </button>
+                                                                    
+                                                                    <div class="quantity-control d-none">
+                                                                        <button class="btn btn-sm btn-outline-secondary quantity-btn minus">-</button>
+                                                                        <span class="quantity">1</span>
+                                                                        <button class="btn btn-sm btn-outline-secondary quantity-btn plus">+</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                        <?php $first = false; ?>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Bouton de validation -->
-                        <div class="mt-4">
-                            <button class="btn btn-primary w-100 py-3" id="submitOrder">
-                                <i class="fas fa-check-circle me-2"></i>
-                                Valider la commande
-                            </button>
-                            <small class="text-muted d-block text-center mt-2">
-                                En validant, vous acceptez nos conditions générales
-                            </small>
+                    </div>
+
+                    <!-- Colonne panier et résumé -->
+                    <div class="col-lg-4">
+                        <div class="order-summary">
+                            <h5 class="mb-4"><i class="fas fa-shopping-cart me-2"></i>Votre commande</h5>
+                            
+                            <!-- Liste des articles -->
+                            <div id="cartItems" class="mb-4">
+                                <div class="cart-empty">
+                                    <i class="fas fa-shopping-cart fa-2x mb-3"></i>
+                                    <p class="mb-0">Votre panier est vide</p>
+                                    <small class="text-muted">Ajoutez des produits pour commencer</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Résumé -->
+                            <div id="orderSummary" style="display: none;">
+                                <div class="summary-item">
+                                    <span>Sous-total</span>
+                                    <span id="subtotal">0,00 $</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Service</span>
+                                    <span id="serviceFee">0,00 $</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Livraison</span>
+                                    <span id="deliveryFee">0,00 $</span>
+                                </div>
+                                <div class="summary-item summary-total">
+                                    <span>Total</span>
+                                    <span id="totalAmount">0,00 $</span>
+                                </div>
+                                
+                                <!-- Notes -->
+                                <div class="mt-4">
+                                    <label class="form-label">Notes pour la commande</label>
+                                    <textarea class="form-control" name="order_notes" rows="3" 
+                                            placeholder="Allergies, préférences, etc."></textarea>
+                                </div>
+                                
+                                <!-- Accordéon pour les options de paiement -->
+                                <!-- <div class="accordion mt-4" id="paymentAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" 
+                                                    data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
+                                                <i class="fas fa-credit-card me-2"></i>Options de paiement
+                                            </button>
+                                        </h2>
+                                        <div id="paymentCollapse" class="accordion-collapse collapse" 
+                                            data-bs-parent="#paymentAccordion">
+                                            <div class="accordion-body">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="radio" 
+                                                        name="payment_method" value="cash" id="cash" checked>
+                                                    <label class="form-check-label" for="cash">
+                                                        Paiement à la réception
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="radio" 
+                                                        name="payment_method" value="card" id="card">
+                                                    <label class="form-check-label" for="card">
+                                                        Carte bancaire
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" 
+                                                        name="payment_method" value="online" id="online">
+                                                    <label class="form-check-label" for="online">
+                                                        Paiement en ligne
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- Accordéon pour les options de paiement -->
+                                <div class="accordion mt-4" id="paymentAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" 
+                                                    data-bs-toggle="collapse" data-bs-target="#paymentCollapse">
+                                                <i class="fas fa-credit-card me-2"></i>Options de paiement
+                                            </button>
+                                        </h2>
+                                        <div id="paymentCollapse" class="accordion-collapse collapse" 
+                                            data-bs-parent="#paymentAccordion">
+                                            <div class="accordion-body">
+                                                <!-- Paiement à la réception -->
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input payment-method" type="radio" 
+                                                        name="payment_method" value="cash" id="cash" checked>
+                                                    <label class="form-check-label" for="cash">
+                                                        <i class="fas fa-money-bill-wave me-2"></i>Paiement à la réception
+                                                    </label>
+                                                </div>
+                                                
+                                                <!-- Carte bancaire -->
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input payment-method" type="radio" 
+                                                        name="payment_method" value="card" id="card">
+                                                    <label class="form-check-label" for="card">
+                                                        <i class="fas fa-credit-card me-2"></i>Carte bancaire
+                                                    </label>
+                                                </div>
+                                                
+                                                <!-- Formulaire carte bancaire (caché par défaut) -->
+                                                <div id="cardPaymentForm" class="border rounded p-3 mb-3" style="display: none;">
+                                                    <h6><i class="fas fa-credit-card me-2"></i>Informations de la carte</h6>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Numéro de carte</label>
+                                                        <input type="text" class="form-control" 
+                                                            placeholder="1234 5678 9012 3456" 
+                                                            maxlength="19"
+                                                            oninput="formatCardNumber(this)">
+                                                        <div class="form-text">Accepté: Visa, MasterCard, American Express</div>
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Date d'expiration</label>
+                                                            <input type="text" class="form-control" 
+                                                                placeholder="MM/AA"
+                                                                maxlength="5"
+                                                                oninput="formatExpiryDate(this)">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">CVV</label>
+                                                            <input type="password" class="form-control" 
+                                                                placeholder="123"
+                                                                maxlength="4"
+                                                                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label class="form-label">Nom sur la carte</label>
+                                                        <input type="text" class="form-control" 
+                                                            placeholder="JEAN DUPONT">
+                                                    </div>
+                                                    <div class="form-check mt-3">
+                                                        <input type="checkbox" class="form-check-input" id="saveCard">
+                                                        <label class="form-check-label" for="saveCard">
+                                                            Sauvegarder cette carte pour de futurs achats
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Paiement en ligne -->
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input payment-method" type="radio" 
+                                                        name="payment_method" value="online" id="online">
+                                                    <label class="form-check-label" for="online">
+                                                        <i class="fas fa-globe me-2"></i>Paiement en ligne
+                                                    </label>
+                                                </div>
+                                                
+                                                <!-- Options paiement en ligne (caché par défaut) -->
+                                                <div id="onlinePaymentForm" class="border rounded p-3 mb-3" style="display: none;">
+                                                    <h6><i class="fas fa-globe me-2"></i>Choisissez votre passerelle de paiement</h6>
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" 
+                                                                    name="online_gateway" value="paypal" id="paypal">
+                                                                <label class="form-check-label" for="paypal">
+                                                                    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" 
+                                                                        alt="PayPal" height="20" class="me-2">
+                                                                    PayPal
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" 
+                                                                    name="online_gateway" value="stripe" id="stripe">
+                                                                <label class="form-check-label" for="stripe">
+                                                                    <i class="fab fa-stripe text-primary me-2"></i>Stripe
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio" 
+                                                                    name="online_gateway" value="paydunya" id="paydunya">
+                                                                <label class="form-check-label" for="paydunya">
+                                                                    PayDunya
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="alert alert-info mt-3 small">
+                                                        <i class="fas fa-info-circle me-2"></i>
+                                                        Vous serez redirigé vers la plateforme de paiement sécurisée pour finaliser votre transaction.
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Mobile Money -->
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input payment-method" type="radio" 
+                                                        name="payment_method" value="mobile_money" id="mobile_money">
+                                                    <label class="form-check-label" for="mobile_money">
+                                                        <i class="fas fa-mobile-alt me-2"></i>Mobile Money
+                                                    </label>
+                                                </div>
+                                                
+                                                <!-- Formulaire Mobile Money (caché par défaut) -->
+                                                <div id="mobileMoneyForm" class="border rounded p-3" style="display: none;">
+                                                    <h6><i class="fas fa-mobile-alt me-2"></i>Paiement par Mobile Money</h6>
+                                                    
+                                                    <!-- Sélection du réseau -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Réseau Mobile Money</label>
+                                                        <select class="form-control" name="mobile_network" id="mobileNetwork">
+                                                            <option value="">-- Sélectionnez votre réseau --</option>
+                                                            <option value="mpesa">M-Pesa</option>
+                                                            <option value="airtel">Airtel Money</option>
+                                                            <option value="orange">Orange Money</option>
+                                                            <option value="afrimoney">Afrimoney</option>
+                                                            <option value="mtn">MTN Mobile Money</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <!-- Numéro de téléphone -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Numéro de téléphone</label>
+                                                        <input type="tel" class="form-control" 
+                                                            name="mobile_number"
+                                                            placeholder="Ex: +243 973 900 115"
+                                                            oninput="formatPhoneNumber(this)">
+                                                    </div>
+                                                    
+                                                    <!-- Processus étape par étape -->
+                                                    <div class="alert alert-warning small">
+                                                        <h6><i class="fas fa-list-ol me-2"></i>Processus de paiement:</h6>
+                                                        <ol class="mb-0">
+                                                            <li>Entrez votre numéro de téléphone Mobile Money</li>
+                                                            <li>Cliquez sur "Confirmer la commande"</li>
+                                                            <li>Vous recevrez une demande de paiement sur votre téléphone</li>
+                                                            <li>Validez le paiement sur votre application Mobile Money</li>
+                                                            <li>Votre commande sera confirmée automatiquement</li>
+                                                        </ol>
+                                                    </div>
+                                                    
+                                                    <!-- Frais de transaction -->
+                                                    <div class="alert alert-info small mt-2">
+                                                        <i class="fas fa-info-circle me-2"></i>
+                                                        Des frais de transaction de 1% peuvent s'appliquer selon votre opérateur.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Bouton de validation -->
+                                <div class="mt-4">
+                                    <button class="btn btn-primary w-100 py-3" id="submitOrder">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Valider la commande
+                                    </button>
+                                    <small class="text-muted d-block text-center mt-2">
+                                        En validant, vous acceptez nos conditions générales
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Modal de confirmation -->
     <div class="modal fade" id="confirmationModal" tabindex="-1">
@@ -749,7 +761,6 @@ try {
             </div>
         </div>
     </div>
-</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <script>
