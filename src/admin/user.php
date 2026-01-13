@@ -9,74 +9,84 @@ if (!Security::isLoggedIn() || !Security::isAdmin()) {
 }
 ?>
 
+<style>
+    #container{
+                margin-top:80px;
+                margin-left: 270px;
+                position: fixed;
+                scrol
+            }   
+</style>
     
-<div id="container" class="container">
-    <div class="col-md-12 col-lg-12 user-content">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-primary"></i>Utilisateurs</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openCreate()">
-                <i class="fas fa-user-plus me-2"></i>Nouvel utilisateur
-            </button>
-        </div>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <div class="col-md-12 col-lg-12 user-content">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-primary"></i>Utilisateurs</h1>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal" onclick="openCreate()">
+                    <i class="fas fa-user-plus me-2"></i>Nouvel utilisateur
+                </button>
+            </div>
 
-        <!-- Filtres -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
-                        <label class="form-label">Recherche</label>
-                        <input type="text" id="search" class="form-control" placeholder="Nom, prénom, email">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Rôle</label>
-                        <select id="role" class="form-select">
-                            <option value="">Tous</option>
-                            <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
-                            <option value="staff">Staff</option>
-                            <option value="customer">Client</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Statut</label>
-                        <select id="status" class="form-select">
-                            <option value="">Tous</option>
-                            <option value="active">Actif</option>
-                            <option value="inactive">Inactif</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 text-end">
-                        <button class="btn btn-outline-secondary" id="btnReset"><i class="fas fa-rotate-left me-1"></i>Réinitialiser</button>
+            <!-- Filtres -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label">Recherche</label>
+                            <input type="text" id="search" class="form-control" placeholder="Nom, prénom, email">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Rôle</label>
+                            <select id="role" class="form-select">
+                                <option value="">Tous</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                                <option value="staff">Staff</option>
+                                <option value="customer">Client</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Statut</label>
+                            <select id="status" class="form-select">
+                                <option value="">Tous</option>
+                                <option value="active">Actif</option>
+                                <option value="inactive">Inactif</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <button class="btn btn-outline-secondary" id="btnReset"><i class="fas fa-rotate-left me-1"></i>Réinitialiser</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Tableau des utilisateurs -->
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-hover align-middle" id="usersTable">
-                        <thead>
-                            <tr>
-                                <th>Avatar</th>
-                                <th>Nom</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Rôle</th>
-                                <th>Statut</th>
-                                <th>Dernière connexion</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            <!-- Tableau des utilisateurs -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover align-middle" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Avatar</th>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Rôle</th>
+                                    <th>Statut</th>
+                                    <th>Dernière connexion</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Pagination" id="paginationContainer">
+                        <ul class="pagination justify-content-center mb-0" id="pagination"></ul>
+                    </nav>
                 </div>
-                
-                <!-- Pagination -->
-                <nav aria-label="Pagination" id="paginationContainer">
-                    <ul class="pagination justify-content-center mb-0" id="pagination"></ul>
-                </nav>
             </div>
         </div>
     </div>

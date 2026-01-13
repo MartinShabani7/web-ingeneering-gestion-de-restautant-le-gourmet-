@@ -270,13 +270,10 @@ $stats = $stmt->fetch();
         }
     </style>
 
-    <div id="container" class="container">
-    <!-- <div class="col-md-12 col-lg-11 temoignages-content"> -->
-        <div class="row">
-
-
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
             <!-- Contenu principal -->
-            <div class="col-md-12 col-lg-12 temoignages-content">
+            <div class="col-md-11 col-lg-11 temoignages-content">
                 <!-- En-tête -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h4">
@@ -532,8 +529,8 @@ $stats = $stmt->fetch();
                     </div>
                 </div>
             </div>
-        </div>
     </div>
+</div>
 
     <!-- Modals en dehors de la boucle pour éviter la duplication -->
     <?php foreach ($testimonials as $testimonial): ?>

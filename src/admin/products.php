@@ -259,109 +259,111 @@ $categories = $pdo->query("SELECT id, name FROM categories WHERE is_active = 1 O
             margin-bottom: 0;
         }
     </style>
-    <!-- <div class="container-fluid p-4"> -->
-    <div id="container" class="container">
-    <div class="col-md-12 col-lg-12 products-content">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3 mb-0"><i class="fas fa-utensils me-2 text-primary"></i>Gestion des produits</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreate()">
-                <i class="fas fa-plus me-2"></i>Nouveau produit
-            </button>
-        </div>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <div class="col-md-12 col-lg-12 products-content">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h3 mb-0"><i class="fas fa-utensils me-2 text-primary"></i>Gestion des produits</h1>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreate()">
+                    <i class="fas fa-plus me-2"></i>Nouveau produit
+                </button>
+            </div>
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-3">
-                        <!-- Formulaore de recherche -->
-                        <!-- <label class="form-label"></label> -->
-                        <input type="text" id="search" class="form-control" placeholder=" Recherche par Nom ou description">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Catégorie</label>
-                        <select id="filterCategory" class="form-select">
-                            <option value="">Toutes</option>
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="onlyActive">
-                            <label class="form-check-label" for="onlyActive">Disponibles uniquement</label>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <!-- Formulaore de recherche -->
+                            <!-- <label class="form-label"></label> -->
+                            <input type="text" id="search" class="form-control" placeholder=" Recherche par Nom ou description">
                         </div>
-                    </div>
-                    <div class="col-md-5 text-end">
-                        <div class="btn-group" role="group">
-                            
-                            <!-- Menu déroulant pour l'export -->
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-download me-1"></i>Exporter
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="exportData('excel')">
-                                            <i class="fas fa-file-excel text-success me-2"></i>Excel (.xlsx)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="exportData('csv')">
-                                            <i class="fas fa-file-csv text-info me-2"></i>CSV (.csv)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="exportData('pdf')">
-                                            <i class="fas fa-file-pdf text-danger me-2"></i>PDF (.pdf)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="exportData('word')">
-                                            <i class="fas fa-file-word text-primary me-2"></i>Word (.docx)
-                                        </a>
-                                    </li>
-                                </ul>
+                        <div class="col-md-2">
+                            <label class="form-label">Catégorie</label>
+                            <select id="filterCategory" class="form-select">
+                                <option value="">Toutes</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="onlyActive">
+                                <label class="form-check-label" for="onlyActive">Disponibles uniquement</label>
                             </div>
                         </div>
-                        <!-- Bouton d'impression -->
-                        <button class="btn btn-primary" onclick="printProducts()" title="Imprimer la liste">
-                            <i class="fas fa-print me-1"></i>Imprimer
-                        </button>
+                        <div class="col-md-5 text-end">
+                            <div class="btn-group" role="group">
+                                
+                                <!-- Menu déroulant pour l'export -->
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-download me-1"></i>Exporter
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="exportData('excel')">
+                                                <i class="fas fa-file-excel text-success me-2"></i>Excel (.xlsx)
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="exportData('csv')">
+                                                <i class="fas fa-file-csv text-info me-2"></i>CSV (.csv)
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="exportData('pdf')">
+                                                <i class="fas fa-file-pdf text-danger me-2"></i>PDF (.pdf)
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="exportData('word')">
+                                                <i class="fas fa-file-word text-primary me-2"></i>Word (.docx)
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Bouton d'impression -->
+                            <button class="btn btn-primary" onclick="printProducts()" title="Imprimer la liste">
+                                <i class="fas fa-print me-1"></i>Imprimer
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-body">
-                <div id="listContainer" class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-hover align-middle" id="productsTable">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Image</th>
-                                <th>Nom</th>
-                                <th>Catégorie</th>
-                                <th class="text-end">Prix</th>
-                                <th>Disponible</th>
-                                <th>Mis en avant</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+            <div class="card">
+                <div class="card-body">
+                    <div id="listContainer" class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover align-middle" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Image</th>
+                                    <th>Nom</th>
+                                    <th>Catégorie</th>
+                                    <th class="text-end">Prix</th>
+                                    <th>Disponible</th>
+                                    <th>Mis en avant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center" id="pagination">
+                        </ul>
+                    </nav>
                 </div>
-                
-                <!-- Pagination -->
-                <nav aria-label="Pagination">
-                    <ul class="pagination justify-content-center" id="pagination">
-                    </ul>
-                </nav>
+            </div>
             </div>
         </div>
-        </div>
     </div>
+</div>
 
     <!-- Modal create/update -->
     <div class="modal fade" id="productModal" tabindex="-1">

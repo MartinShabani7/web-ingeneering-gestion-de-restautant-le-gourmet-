@@ -34,92 +34,93 @@
         }
     </style>
 
-    <!-- <div class="container-fluid py-4" id="container" style="position: fixed; " > -->
-<div id="container" class="container">
-    <div class="col-md-12 col-lg-12 partenaires-content">
-        <!-- En-tête -->
-        <div class="row mb-4">
-            <div class="col">
-                <h1 class="h3 mb-0">
-                    <i class="fas fa-handshake me-2 text-primary"></i>
-                    Gestion des Partenaires
-                </h1>
-                <p class="text-muted">Gérez vos partenaires commerciaux</p>
+<div id="container" class="container containere overflow-x-hidden">
+    <div class="row" style ="width:100%">
+        <div class="col-md-12 col-lg-12 partenaires-content">
+            <!-- En-tête -->
+            <div class="row mb-4">
+                <div class="col">
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-handshake me-2 text-primary"></i>
+                        Gestion des Partenaires
+                    </h1>
+                    <p class="text-muted">Gérez vos partenaires commerciaux</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Barre d'outils et filtres -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <div class="card filters-card">
-                    <div class="card-body py-3">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
-                                    <button class="btn btn-outline-secondary" type="button" id="searchBtn">
-                                        <i class="fas fa-search"></i>
+            <!-- Barre d'outils et filtres -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card filters-card">
+                        <div class="card-body py-3">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchInput" placeholder="Rechercher...">
+                                        <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="statusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="1">Actifs</option>
+                                        <option value="0">Inactifs</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="featuredFilter">
+                                        <option value="">Tous</option>
+                                        <option value="1">En avant</option>
+                                        <option value="0">Normaux</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-secondary w-100" id="resetFilters">
+                                        <i class="fas fa-refresh"></i>
                                     </button>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="statusFilter">
-                                    <option value="">Tous les statuts</option>
-                                    <option value="1">Actifs</option>
-                                    <option value="0">Inactifs</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="featuredFilter">
-                                    <option value="">Tous</option>
-                                    <option value="1">En avant</option>
-                                    <option value="0">Normaux</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-outline-secondary w-100" id="resetFilters">
-                                    <i class="fas fa-refresh"></i>
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 text-end">
-                <button class="btn btn-primary" id="addPartenaireBtn">
-                    <i class="fas fa-plus me-2"></i>Nouveau Partenaire
-                </button>
-            </div>
-        </div>
-
-        <!-- Tableau des partenaires -->
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-hover" id="partenairesTable">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Photo</th>
-                                <th>Nom</th>
-                                <th>Adresse</th>
-                                <th>Email</th>
-                                <th>Contact</th>
-                                <th>Statut</th>
-                                <th class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="partenairesBody">
-                            <!-- Les données seront chargées ici -->
-                        </tbody>
-                    </table>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary" id="addPartenaireBtn">
+                        <i class="fas fa-plus me-2"></i>Nouveau Partenaire
+                    </button>
                 </div>
+            </div>
 
-                <!-- Pagination -->
-                <nav aria-label="Pagination" id="paginationNav">
-                    <ul class="pagination justify-content-center" id="pagination">
-                        <!-- La pagination sera générée ici -->
-                    </ul>
-                </nav>
+            <!-- Tableau des partenaires -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover" id="partenairesTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Photo</th>
+                                    <th>Nom</th>
+                                    <th>Adresse</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Statut</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="partenairesBody">
+                                <!-- Les données seront chargées ici -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Pagination" id="paginationNav">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- La pagination sera générée ici -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
