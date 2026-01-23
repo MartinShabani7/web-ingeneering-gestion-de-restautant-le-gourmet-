@@ -3,7 +3,7 @@ src/logs/
 *.log
 
 # Uploads utilisateurs
-src/uploads/
+# src/uploads/
 
 # Fichiers système
 .DS_Store
