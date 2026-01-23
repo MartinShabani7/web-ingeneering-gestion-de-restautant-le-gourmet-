@@ -1,0 +1,14 @@
+# Logs
+src/logs/
+*.log
+
+# Uploads utilisateurs
+src/uploads/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Environnements
+.env
+.env.local

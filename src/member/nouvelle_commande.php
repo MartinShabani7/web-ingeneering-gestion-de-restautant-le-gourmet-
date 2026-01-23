@@ -14,6 +14,8 @@ $user_name = $_SESSION['user_name'] ?? '';
 $user_email = $_SESSION['user_email'] ?? '';
 $user_phone = $_SESSION['user_phone'] ?? '';
 
+$csrf_token = Security::generateCSRFToken();
+
 // Récupérer les produits disponibles
 $products = [];
 $categories = [];
@@ -762,7 +764,7 @@ try {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Panier
@@ -1209,7 +1211,7 @@ try {
         });
     </script> -->
 
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Panier
             let cart = JSON.parse(localStorage.getItem('gourmet_cart')) || [];
@@ -1835,4 +1837,684 @@ try {
                 });
             }
         });
-    </script>
+    </script> -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Fonctions de formatage (doivent être globales)
+    function formatCardNumber(input) {
+        let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formatted = '';
+        
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formatted += ' ';
+            }
+            formatted += value[i];
+        }
+        
+        input.value = formatted.substring(0, 19);
+    }
+
+    function formatExpiryDate(input) {
+        let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        
+        if (value.length >= 2) {
+            let month = value.substring(0, 2);
+            let year = value.substring(2, 4);
+            
+            if (parseInt(month) > 12) {
+                month = '12';
+            }
+            
+            input.value = month + (year ? '/' + year : '');
+        }
+    }
+
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\s+/g, '').replace(/[^0-9+]/gi, '');
+        
+        if (!value.startsWith('+')) {
+            if (value.startsWith('0')) {
+                value = '+243' + value.substring(1);
+            } else if (!value.startsWith('243')) {
+                value = '+243' + value;
+            } else {
+                value = '+' + value;
+            }
+        }
+        
+        let formatted = '';
+        if (value.startsWith('+243')) {
+            formatted = '+243 ' + value.substring(4, 6) + ' ' + value.substring(6, 9) + ' ' + value.substring(9, 12);
+        } else {
+            formatted = value;
+        }
+        
+        input.value = formatted.trim();
+    }
+
+    // Fonction pour défiler vers le panier
+    function scrollToCart() {
+        document.querySelector('.order-summary').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Délégation d'événements pour les boutons "Ajouter"
+    function setupEventListeners() {
+        // Délégation d'événement pour les boutons "Ajouter"
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+                const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+                addToCart(button);
+            }
+            
+            // Supprimer un article
+            if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+                const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+                const index = parseInt(button.dataset.index);
+                removeFromCart(index);
+            }
+            
+            // Diminuer la quantité
+            if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
+                const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
+                const index = parseInt(button.dataset.index);
+                updateQuantity(index, cart[index].quantity - 1);
+            }
+            
+            // Augmenter la quantité
+            if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
+                const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
+                const index = parseInt(button.dataset.index);
+                updateQuantity(index, cart[index].quantity + 1);
+            }
+        });
+        
+        // Gestion du type de commande
+        document.querySelectorAll('input[name="order_type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('dineInInfo').style.display = 'none';
+                document.getElementById('takeawayInfo').style.display = 'none';
+                document.getElementById('deliveryInfo').style.display = 'none';
+                
+                if (this.value === 'dine_in') {
+                    document.getElementById('dineInInfo').style.display = 'block';
+                } else if (this.value === 'takeaway') {
+                    document.getElementById('takeawayInfo').style.display = 'block';
+                } else if (this.value === 'delivery') {
+                    document.getElementById('deliveryInfo').style.display = 'block';
+                }
+                
+                updateCartDisplay();
+            });
+        });
+        
+        // Gestion des paiements
+        document.querySelectorAll('.payment-method').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const cardForm = document.getElementById('cardPaymentForm');
+                const onlineForm = document.getElementById('onlinePaymentForm');
+                const mobileForm = document.getElementById('mobileMoneyForm');
+                
+                if (cardForm) cardForm.style.display = 'none';
+                if (onlineForm) onlineForm.style.display = 'none';
+                if (mobileForm) mobileForm.style.display = 'none';
+                
+                if (this.value === 'card' && cardForm) {
+                    cardForm.style.display = 'block';
+                } else if (this.value === 'online' && onlineForm) {
+                    onlineForm.style.display = 'block';
+                } else if (this.value === 'mobile_money' && mobileForm) {
+                    mobileForm.style.display = 'block';
+                }
+            });
+        });
+        
+        // Soumission de la commande
+        document.getElementById('submitOrder').addEventListener('click', function() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide. Ajoutez des articles avant de commander.');
+                return;
+            }
+            
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            
+            if (orderType === 'dine_in') {
+                const tableSelect = document.getElementById('tableSelect');
+                if (!tableSelect.value) {
+                    if (!confirm('Aucune table sélectionnée. Voulez-vous continuer ? La table sera attribuée automatiquement.')) {
+                        return;
+                    }
+                }
+            }
+            
+            if (orderType === 'delivery') {
+                const address = document.querySelector('input[name="delivery_address"]').value;
+                const zipcode = document.querySelector('input[name="delivery_zipcode"]').value;
+                const city = document.querySelector('input[name="delivery_city"]').value;
+                
+                if (!address || !zipcode || !city) {
+                    alert('Veuillez compléter l\'adresse de livraison.');
+                    return;
+                }
+            }
+            
+            showConfirmationModal();
+        });
+        
+        // Confirmation finale
+        document.getElementById('confirmOrderBtn').addEventListener('click', confirmOrder);
+    }
+
+    // Variables globales
+    let cart = JSON.parse(localStorage.getItem('gourmet_cart')) || [];
+    const serviceFee = 2.50;
+    const deliveryFee = 4.99;
+
+    // Fonction pour ajouter au panier
+    function addToCart(button) {
+        const productId = parseInt(button.dataset.productId);
+        const productName = button.dataset.productName;
+        const productPrice = parseFloat(button.dataset.productPrice);
+        const productImage = button.dataset.productImage;
+        
+        const existingIndex = cart.findIndex(item => item.id === productId);
+        
+        if (existingIndex > -1) {
+            cart[existingIndex].quantity += 1;
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productImage,
+                quantity: 1
+            });
+        }
+        
+        updateCartDisplay();
+        
+        // Animation de feedback
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check me-1"></i>Ajouté';
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-success');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('btn-success');
+            button.classList.add('btn-outline-primary');
+        }, 1000);
+    }
+
+    // Fonction pour mettre à jour l'affichage du panier
+    function updateCartDisplay() {
+        const cartItems = document.getElementById('cartItems');
+        const orderSummary = document.getElementById('orderSummary');
+        const mobileCartPreview = document.getElementById('mobileCartPreview');
+        const mobileCartCount = document.getElementById('mobileCartCount');
+        
+        mobileCartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        if (cart.length === 0) {
+            cartItems.innerHTML = `
+                <div class="cart-empty">
+                    <i class="fas fa-shopping-cart fa-2x mb-3"></i>
+                    <p class="mb-0">Votre panier est vide</p>
+                    <small class="text-muted">Ajoutez des produits pour commencer</small>
+                </div>
+            `;
+            orderSummary.style.display = 'none';
+            
+            mobileCartPreview.innerHTML = `
+                <i class="fas fa-shopping-cart fa-2x mb-3"></i>
+                <p class="mb-0">Votre panier est vide</p>
+            `;
+        } else {
+            let itemsHtml = '';
+            let subtotal = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                itemsHtml += `
+                    <div class="cart-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">${item.name}</h6>
+                                <small class="text-muted">${item.price.toFixed(2).replace('.', ',')} $</small>
+                            </div>
+                            <div class="quantity-control">
+                                <button class="btn btn-sm btn-outline-secondary quantity-btn minus" 
+                                        data-index="${index}">-</button>
+                                <span class="quantity mx-2">${item.quantity}</span>
+                                <button class="btn btn-sm btn-outline-secondary quantity-btn plus" 
+                                        data-index="${index}">+</button>
+                            </div>
+                            <div class="ms-3 text-end">
+                                <div class="fw-bold">${itemTotal.toFixed(2).replace('.', ',')} $</div>
+                                <button class="btn btn-sm btn-link text-danger p-0 remove-item" 
+                                        data-index="${index}">
+                                    <small><i class="fas fa-trash"></i></small>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = itemsHtml;
+            orderSummary.style.display = 'block';
+            
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const isDelivery = orderType === 'delivery';
+            const isTakeaway = orderType === 'takeaway';
+            
+            const deliveryTotal = isDelivery ? deliveryFee : 0;
+            const serviceTotal = (!isTakeaway && !isDelivery) ? serviceFee : 0;
+            const total = subtotal + serviceTotal + deliveryTotal;
+            
+            document.getElementById('subtotal').textContent = subtotal.toFixed(2).replace('.', ',') + ' $';
+            document.getElementById('serviceFee').textContent = serviceTotal.toFixed(2).replace('.', ',') + ' $';
+            document.getElementById('deliveryFee').textContent = deliveryTotal.toFixed(2).replace('.', ',') + ' $';
+            document.getElementById('totalAmount').textContent = total.toFixed(2).replace('.', ',') + ' $';
+            
+            mobileCartPreview.innerHTML = `
+                <div class="p-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>${cart.reduce((sum, item) => sum + item.quantity, 0)} article(s)</span>
+                        <span class="fw-bold">${total.toFixed(2).replace('.', ',')} $</span>
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-sm btn-outline-primary" onclick="scrollToCart()">
+                            Voir le panier
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        localStorage.setItem('gourmet_cart', JSON.stringify(cart));
+    }
+
+    // Fonction pour mettre à jour la quantité
+    function updateQuantity(index, newQuantity) {
+        if (newQuantity < 1) {
+            removeFromCart(index);
+            return;
+        }
+        
+        if (newQuantity > 20) {
+            alert('Quantité maximale : 20 par article');
+            return;
+        }
+        
+        cart[index].quantity = newQuantity;
+        updateCartDisplay();
+    }
+
+    // Fonction pour supprimer du panier
+    function removeFromCart(index) {
+        if (confirm('Supprimer cet article du panier ?')) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+    }
+
+    // Fonction pour afficher la modal de confirmation
+    function showConfirmationModal() {
+        const orderType = document.querySelector('input[name="order_type"]:checked').value;
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        const notes = document.querySelector('textarea[name="order_notes"]').value;
+        
+        let details = `
+            <h6>Récapitulatif</h6>
+            <div class="mb-3">
+                <strong>Type:</strong> ${orderType === 'dine_in' ? 'Sur place' : orderType === 'takeaway' ? 'À emporter' : 'Livraison'}<br>
+                <strong>Articles:</strong> ${cart.reduce((sum, item) => sum + item.quantity, 0)}<br>
+                <strong>Paiement:</strong> ${paymentMethod === 'cash' ? 'À la réception' : paymentMethod === 'card' ? 'Carte bancaire' : paymentMethod === 'online' ? 'En ligne' : 'Mobile Money'}
+            </div>
+            
+            <div class="border-top pt-3">
+                <h6>Articles</h6>
+        `;
+        
+        cart.forEach(item => {
+            details += `
+                <div class="d-flex justify-content-between small">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>${(item.price * item.quantity).toFixed(2).replace('.', ',')} $</span>
+                </div>
+            `;
+        });
+        
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const isDelivery = orderType === 'delivery';
+        const isTakeaway = orderType === 'takeaway';
+        const deliveryTotal = isDelivery ? deliveryFee : 0;
+        const serviceTotal = (!isTakeaway && !isDelivery) ? serviceFee : 0;
+        const total = subtotal + serviceTotal + deliveryTotal;
+        
+        details += `
+            </div>
+            <div class="border-top pt-3">
+                <div class="d-flex justify-content-between">
+                    <strong>Total:</strong>
+                    <strong>${total.toFixed(2).replace('.', ',')} $</strong>
+                </div>
+            </div>
+        `;
+        
+        if (notes) {
+            details += `
+                <div class="mt-3">
+                    <strong>Notes:</strong><br>
+                    <small>${notes}</small>
+                </div>
+            `;
+        }
+        
+        document.getElementById('confirmationDetails').innerHTML = details;
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    // Fonction pour confirmer la commande
+    // function confirmOrder() {
+    //     const submitBtn = document.getElementById('submitOrder');
+    //     const confirmBtn = document.getElementById('confirmOrderBtn');
+        
+    //     // Désactiver les boutons
+    //     submitBtn.disabled = true;
+    //     confirmBtn.disabled = true;
+    //     confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Envoi...';
+        
+    //     // Préparer les données
+    //     const formData = new FormData();
+    //     // Note: Vous devez générer un token CSRF côté serveur
+    //     const csrfToken = '<?= Security::generateCSRFToken() ?>';
+    //     formData.append('csrf_token', csrfToken);
+        
+    //     formData.append('action', 'create_order');
+    //     formData.append('cart_items', JSON.stringify(cart));
+        
+    //     // Envoyer la requête
+    //     fetch('../admin/api/client_commandes_newMMM.php', {
+    //         method: 'POST',
+    //         headers: {
+    //             'X-Requested-With': 'XMLHttpRequest'
+    //         },
+    //         body: formData
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         if (data.success) {
+    //             const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+    //             modal.hide();
+                
+    //             // Vider le panier
+    //             cart = [];
+    //             localStorage.removeItem('gourmet_cart');
+    //             updateCartDisplay();
+                
+    //             alert('Commande créée avec succès!');
+    //             // Rediriger si nécessaire
+    //             // window.location.href = 'commandes.php';
+    //         } else {
+    //             alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
+    //             confirmBtn.disabled = false;
+    //             confirmBtn.innerHTML = 'Confirmer';
+    //             submitBtn.disabled = false;
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('Erreur:', error);
+    //         alert('Erreur réseau. Veuillez réessayer.');
+    //         confirmBtn.disabled = false;
+    //         confirmBtn.innerHTML = 'Confirmer';
+    //         submitBtn.disabled = false;
+    //     });
+    // }
+
+    // Fonction pour confirmer la commande
+    function confirmOrder() {
+        const submitBtn = document.getElementById('submitOrder');
+        const confirmBtn = document.getElementById('confirmOrderBtn');
+        
+        // =================== VALIDATION DES PAIEMENTS ===================
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (paymentMethod === 'card') {
+            const cardNumber = document.querySelector('#cardPaymentForm input[type="text"]')?.value;
+            const expiryDate = document.querySelector('#cardPaymentForm input[placeholder="MM/AA"]')?.value;
+            const cvv = document.querySelector('#cardPaymentForm input[type="password"]')?.value;
+            
+            if (!cardNumber || cardNumber.replace(/\s/g, '').length < 16) {
+                alert('Veuillez entrer un numéro de carte valide');
+                return;
+            }
+            
+            if (!expiryDate || expiryDate.length !== 5) {
+                alert('Veuillez entrer une date d\'expiration valide (MM/AA)');
+                return;
+            }
+            
+            if (!cvv || cvv.length < 3) {
+                alert('Veuillez entrer le code CVV');
+                return;
+            }
+        }
+        
+        if (paymentMethod === 'mobile_money') {
+            const mobileNetwork = document.querySelector('#mobileNetwork')?.value;
+            const mobileNumber = document.querySelector('input[name="mobile_number"]')?.value;
+            
+            if (!mobileNetwork) {
+                alert('Veuillez sélectionner votre réseau Mobile Money');
+                return;
+            }
+            
+            if (!mobileNumber || mobileNumber.replace(/\s/g, '').length < 10) {
+                alert('Veuillez entrer un numéro de téléphone valide');
+                return;
+            }
+        }
+        
+        if (paymentMethod === 'online') {
+            const onlineGateway = document.querySelector('input[name="online_gateway"]:checked')?.value;
+            if (!onlineGateway) {
+                alert('Veuillez sélectionner une passerelle de paiement en ligne');
+                return;
+            }
+        }
+        // =================== FIN VALIDATION ===================
+        
+        // Désactiver les boutons
+        submitBtn.disabled = true;
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Envoi...';
+        
+        // Préparer les données
+        const formData = new FormData();
+        
+        // Token CSRF
+        const csrfToken = '<?= Security::generateCSRFToken() ?>';
+        formData.append('csrf_token', csrfToken);
+        
+        formData.append('action', 'create_order');
+        
+        // **AJOUTER LES INFORMATIONS CLIENT - IMPORTANT !**
+        // Si vous avez un utilisateur connecté, utilisez ses données
+        // Sinon, créez un client "invité" ou demandez les infos
+        
+        // Option 1: Si vous avez un utilisateur connecté (décommentez si nécessaire)
+        formData.append('customer_id', <?= $_SESSION['user_id'] ?? 0 ?>);
+        formData.append('customer_name', '<?= addslashes($_SESSION['user_name'] ?? 'Client') ?>');
+        formData.append('customer_email', '<?= addslashes($_SESSION['user_email'] ?? '') ?>');
+        formData.append('customer_phone', '<?= addslashes($_SESSION['user_phone'] ?? '') ?>');
+        
+        // Option 2: Pour le moment, utilisez un ID temporaire
+        // Dans une vraie application, vous devriez créer un client invité ou demander les infos
+        // formData.append('customer_id', 0); // 0 pour client invité
+        // formData.append('customer_name', 'Client Invité');
+        // formData.append('customer_email', 'invite@example.com');
+        // formData.append('customer_phone', '+243 000 000 000');
+        
+        // **OU demander les infos client via un formulaire modal**
+        // Vous pourriez ajouter un formulaire pour les clients non connectés
+        
+        // Type de commande et informations
+        const orderType = document.querySelector('input[name="order_type"]:checked').value;
+        formData.append('order_type', orderType);
+        
+        if (orderType === 'dine_in') {
+            const tableSelect = document.getElementById('tableSelect');
+            if (tableSelect.value) {
+                formData.append('table_number', tableSelect.value);
+                formData.append('table_id', tableSelect.options[tableSelect.selectedIndex].dataset.id || '');
+            }
+        } else if (orderType === 'takeaway') {
+            const pickupTime = document.querySelector('input[name="pickup_time"]').value;
+            formData.append('pickup_time', pickupTime);
+        } else if (orderType === 'delivery') {
+            formData.append('delivery_address', document.querySelector('input[name="delivery_address"]').value);
+            formData.append('delivery_zipcode', document.querySelector('input[name="delivery_zipcode"]').value);
+            formData.append('delivery_city', document.querySelector('input[name="delivery_city"]').value);
+            formData.append('delivery_notes', document.querySelector('textarea[name="delivery_notes"]').value);
+        }
+        
+        // Paiement
+        formData.append('payment_method', paymentMethod);
+        
+        // Ajouter les détails spécifiques au mode de paiement
+        if (paymentMethod === 'card') {
+            const cardNumber = document.querySelector('#cardPaymentForm input[type="text"]')?.value;
+            const expiryDate = document.querySelector('#cardPaymentForm input[placeholder="MM/AA"]')?.value;
+            const cardName = document.querySelector('#cardPaymentForm input[placeholder="JEAN DUPONT"]')?.value;
+            
+            // En production, utilisez un tokenisation!
+            formData.append('payment_card_last4', cardNumber ? cardNumber.slice(-4).replace(/\s/g, '') : '');
+            formData.append('payment_card_expiry', expiryDate || '');
+            formData.append('payment_card_name', cardName || '');
+        }
+        
+        if (paymentMethod === 'mobile_money') {
+            const mobileNetwork = document.querySelector('#mobileNetwork')?.value;
+            const mobileNumber = document.querySelector('input[name="mobile_number"]')?.value;
+            
+            formData.append('payment_mobile_network', mobileNetwork || '');
+            formData.append('payment_mobile_number', mobileNumber || '');
+        }
+        
+        if (paymentMethod === 'online') {
+            const onlineGateway = document.querySelector('input[name="online_gateway"]:checked')?.value;
+            formData.append('payment_online_gateway', onlineGateway || '');
+        }
+        
+        // Notes
+        const notes = document.querySelector('textarea[name="order_notes"]').value;
+        if (notes) {
+            formData.append('order_notes', notes);
+        }
+        
+        // Articles du panier
+        formData.append('cart_items', JSON.stringify(cart));
+        
+        // Calcul des totaux
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const isDelivery = orderType === 'delivery';
+        const isTakeaway = orderType === 'takeaway';
+        const deliveryTotal = isDelivery ? deliveryFee : 0;
+        const serviceTotal = (!isTakeaway && !isDelivery) ? serviceFee : 0;
+        const total = subtotal + serviceTotal + deliveryTotal;
+        
+        formData.append('subtotal', subtotal.toFixed(2));
+        formData.append('tax_amount', '0.00');
+        formData.append('service_fee', serviceTotal.toFixed(2));
+        formData.append('delivery_fee', deliveryTotal.toFixed(2));
+        formData.append('total_amount', total.toFixed(2));
+        
+        console.log('Données envoyées:', {
+            csrf_token: csrfToken.substring(0, 10) + '...',
+            customer_id: 0,
+            cart_items_count: cart.length,
+            total_amount: total
+        });
+        
+        // Envoyer la requête
+        fetch('../admin/api/client_commandes_newMMM.php', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Réponse reçue:', data);
+            
+            if (data.success) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                
+                // Afficher le message de succès
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+                alert.style.zIndex = '1060';
+                alert.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    ${data.message || 'Commande créée avec succès!'}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alert);
+                
+                // Vider le panier
+                cart = [];
+                localStorage.removeItem('gourmet_cart');
+                updateCartDisplay();
+                
+                // Rediriger après 3 secondes
+                setTimeout(() => {
+                    window.location.href = 'commandes.php';
+                }, 3000);
+            } else {
+                alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = 'Confirmer';
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur réseau. Veuillez réessayer.');
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = 'Confirmer';
+            submitBtn.disabled = false;
+        });
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updateCartDisplay();
+        
+        // Initialiser l'heure de pickup
+        const pickupTime = document.querySelector('input[name="pickup_time"]');
+        if (pickupTime) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + 30);
+            pickupTime.min = now.toTimeString().substring(0, 5);
+            
+            now.setMinutes(now.getMinutes() + 15);
+            pickupTime.value = now.toTimeString().substring(0, 5);
+        }
+    });
+</script>
+
+</body>
+</html>
